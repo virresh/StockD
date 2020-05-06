@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<fx:root minHeight="600.0" minWidth="600.0" prefHeight="600.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <MenuBar prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Settings">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Preferences" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="About">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Details" />
+                  <MenuItem mnemonicParsing="false" text="Notice" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <HBox alignment="CENTER" layoutY="577.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefWidth="300.0">
+               <children>
+                  <Label layoutX="19.0" layoutY="-2.0" prefHeight="29.0" prefWidth="115.0" text="Update Status" AnchorPane.bottomAnchor="-2.0" AnchorPane.leftAnchor="19.0" AnchorPane.topAnchor="-2.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="UpdateLabel" layoutX="211.0" prefHeight="25.0" prefWidth="50.0" text="Latest" textFill="#f51717" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="25.0" prefWidth="300.0">
+               <children>
+                  <Label layoutX="24.0" prefHeight="25.0" prefWidth="160.0" text="Internet Connection" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="24.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="InternetStatus" layoutX="236.0" prefHeight="25.0" text="OK" textFill="#29dd8c" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <AnchorPane layoutY="37.0" prefHeight="171.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <VBox layoutX="7.0" layoutY="14.0" prefWidth="600.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-7.0">
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <Label layoutX="157.0" layoutY="4.0" text="From Date">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <JFXDatePicker accessibleText="From Date Picker" layoutX="308.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <VBox layoutX="7.0" layoutY="57.0" prefWidth="600.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="-7.0">
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <Label layoutX="167.0" layoutY="5.0" text="To Date">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                        <JFXDatePicker accessibleText="To Date Picker" layoutX="311.0" layoutY="1.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="1.0" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+            <VBox layoutX="5.0" layoutY="104.0" prefWidth="600.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="-5.0">
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <JFXButton accessibleText="Download Button" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" defaultButton="true" layoutX="218.0" prefWidth="160.0" style="-jfx-button-type: RAISED; -jfx-disable-visual-focus: false; -fx-border-color: rgba(0,0,0,25); -fx-background-color: rgba(200, 200, 200, 255);" text="Download" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="222.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <JFXTextArea layoutX="1.0" layoutY="199.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0" />
+   </children>
+   <opaqueInsets>
+      <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+   </opaqueInsets>
+</fx:root>
