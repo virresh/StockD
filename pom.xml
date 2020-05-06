@@ -5,7 +5,18 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Stock D</name>
   <description>A standalone desktop utility to download end of day and historical stock market data for indian stock markets. Currently supports NSE equity data. Fully open source project, successor of NSE EOD Data Downloader.</description>
+	<repositories>
+	    <repository>
+	      <id>jcenter</id>
+	      <url>https://jcenter.bintray.com/</url>
+	    </repository>
+	</repositories>  
   <build>
+  	<resources>
+       <resource>
+	       <directory>src/fxelems</directory>
+       </resource>
+    </resources>
     <sourceDirectory>src</sourceDirectory>
     <plugins>
       <plugin>
@@ -22,8 +33,34 @@
         <version>0.0.4</version>
         <configuration>
           <mainClass>main.FxApp</mainClass>
+              <options>
+                  <option>--add-opens</option>
+                  <option>javafx.graphics/javafx.css=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.base/com.sun.javafx.runtime=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.controls/com.sun.javafx.scene.control.behavior=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.controls/com.sun.javafx.scene.control=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.base/com.sun.javafx.binding=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.base/com.sun.javafx.event=ALL-UNNAMED</option>
+                  <option>--add-opens</option>
+                  <option>javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED</option>
+                  <option>--add-exports</option>
+                  <option>javafx.controls/com.sun.javafx.scene.control.behavior=com.jfoenix</option>
+                  <option>--add-exports</option>
+                  <option>javafx.controls/com.sun.javafx.scene.control=com.jfoenix</option>
+                  <option>--add-exports</option>
+                  <option>javafx.base/com.sun.javafx.binding=com.jfoenix</option>
+                  <option>--add-exports</option>
+                  <option>javafx.graphics/com.sun.javafx.stage=com.jfoenix</option>
+                  <option>--add-exports</option>
+                  <option>javafx.base/com.sun.javafx.event=com.jfoenix</option>
+              </options>
         </configuration>
-    </plugin>
+      </plugin>
     </plugins>
   </build>
   <dependencies>
@@ -41,6 +78,11 @@
 	    <groupId>com.jfoenix</groupId>
 	    <artifactId>jfoenix</artifactId>
 	    <version>9.0.8</version>
+	</dependency>
+	<dependency>
+	  <groupId>joinery</groupId>
+	  <artifactId>joinery-dataframe</artifactId>
+	  <version>1.9</version>
 	</dependency>
   </dependencies>
 </project>
