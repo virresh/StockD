@@ -114,7 +114,7 @@ public class SettingWindowController implements Initializable {
 					break;
 				}
 			}
-			index.getChildren().add(container);
+			equity.getChildren().add(container);
 		}
 		
 	}

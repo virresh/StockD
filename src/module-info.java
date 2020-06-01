@@ -18,6 +18,6 @@ module StockD {
 	requires java.sql;
 	requires java.logging;
 	requires sql2o;
-	requires jackson.databind;
-	requires jackson.core;
+	requires com.fasterxml.jackson.databind;
+	requires com.fasterxml.jackson.core;
 }
