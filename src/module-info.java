@@ -6,6 +6,7 @@ module StockD {
 	exports common;
 	exports main;
 	exports models;
+	opens fxcontrollers to javafx.fxml;
 
 	requires org.apache.derby.engine;
 	requires org.apache.derby.commons;

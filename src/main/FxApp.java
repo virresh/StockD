@@ -46,9 +46,11 @@ public class FxApp extends Application {
 	public void start(Stage primaryStage) {
 		Parent root = null;
 		try {
-			root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/SettingsWindow.fxml"));
 		} catch (IOException e) {
 			logger.log(Level.FINER, e.getMessage(), e);
+			System.out.println(e);
+			e.printStackTrace();
 		}
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
@@ -58,13 +60,13 @@ public class FxApp extends Application {
 	
     public static void main(String[] args) {
     	try {
-	    	// Setup logging facilities
+	    	//// Setup logging facilities
     		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	    	FileHandler fh = new FileHandler(System.getProperty("user.dir") + "/app.log", true);
 	    	SimpleFormatter formatter = new SimpleFormatter();
 	    	fh.setFormatter(formatter);
 	    	
-	    	// Setup temporary directory
+	    	//// Setup temporary directory
 	    	File dir = new File(System.getProperty("user.dir")+"/Temp");
 	    	if(!dir.exists()) {
 	    		dir.mkdir();
@@ -75,6 +77,10 @@ public class FxApp extends Application {
 					tempFiles[i].delete();
 				}
 	    	}
+	    	
+	    	//// Setup Configuration
+	    	ConfigurationWrapper configs = ConfigurationWrapper.getInstance();
+	    	
 	    	if(args.length == 0) {
 	    		launch();    		
 	    	}

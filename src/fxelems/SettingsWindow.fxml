@@ -1,16 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="SettingWindowController">
+<AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxcontrollers.SettingWindowController">
    <children>
       <JFXTabPane fx:id="configuration_tab" prefHeight="600.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab closable="false" text="Downloads">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <JFXTabPane prefHeight="569.0" prefWidth="600.0" rotateGraphic="true" side="LEFT" stylesheets="@subtabs.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <tabs>
+                              <Tab text="Index">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <FlowPane fx:id="index" alignment="CENTER" columnHalignment="CENTER" hgap="5.0" prefHeight="200.0" prefWidth="200.0" vgap="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-3.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <HBox prefHeight="40.0" prefWidth="490.0" spacing="20.0">
+                                                   <children>
+                                                      <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="234.0" text="Check All" />
+                                                      <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="234.0" text="Uncheck All" />
+                                                   </children>
+                                                </HBox>
+                                             </children></FlowPane>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="Equity">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <FlowPane fx:id="equity" alignment="CENTER" columnHalignment="CENTER" prefHeight="568.0" prefWidth="490.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children></AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="Futures">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <FlowPane fx:id="futures" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children></AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="Currency">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <FlowPane fx:id="currency" alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children></AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="Options">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <FlowPane fx:id="options" alignment="CENTER" columnHalignment="CENTER" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                       </children></AnchorPane>
+                                </content>
+                              </Tab>
+                           </tabs>
+                        </JFXTabPane>
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab closable="false" text="Others">

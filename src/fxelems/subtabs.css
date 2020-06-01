@@ -1,0 +1,7 @@
+.tab *.tab-label {
+    -fx-rotate: 90;
+}
+
+.tab {
+    -fx-padding: 3em 0em 3em 0em;
+}

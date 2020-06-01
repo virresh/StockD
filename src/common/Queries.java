@@ -87,6 +87,18 @@ public class Queries {
 				"    (:BASE_URL, :STOCK_TYPE)"
 				;
 	}
+	
+	public static String readBaseLinks() {
+		return "SELECT * FROM STOCKD.BASELINK";
+	}
+	
+	public static String readNormalLinks() {
+		return "SELECT * FROM STOCKD.LINKS";
+	}
+	
+	public static String readSettings() {
+		return "SELECT * FROM STOCKD.SETTINGS";
+	}
 }
 
 /*
@@ -161,4 +173,12 @@ SET
     BASE_URL=:BASE_URL
 WHERE
     STOCK_TYPE=:STOCK_TYPE
+    
+
+SELECT * FROM STOCKD.BASELINK
+
+SELECT * FROM STOCKD.LINKS
+
+SELECT * FROM STOCKD.SETTINGS
+
 */

@@ -19,6 +19,18 @@ public class ConfigurationWrapper {
 	private static ConfigurationWrapper instance;
 	private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	
+	public List<Setting> get_all_settings(){
+		return all_settings;
+	}
+	
+	public List<Link> get_all_links(){
+		return all_links;
+	}
+	
+	public List<BaseLink> get_base_links(){
+		return base_links;
+	}
+	
 	private ConfigurationWrapper() {
 		all_settings = new ArrayList<Setting>();
 		all_links = new ArrayList<Link>();
@@ -89,12 +101,39 @@ public class ConfigurationWrapper {
 		logger.log(Level.INFO, "All settings updated\n");
 	}
 	
+	public void load_from_from_db() {
+		try {
+			update_all_baselinks(
+					DBConnection.getConnection()
+					.createQuery(Queries.readBaseLinks())
+					.executeAndFetch(BaseLink.class)
+			);
+			
+			update_all_links(
+					DBConnection.getConnection()
+					.createQuery(Queries.readNormalLinks())
+					.executeAndFetch(Link.class)
+			);
+
+			update_all_settings(
+					DBConnection.getConnection()
+					.createQuery(Queries.readSettings())
+					.executeAndFetch(Setting.class)
+			);
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			logger.log(Level.SEVERE, e.getMessage());
+		}
+	}
+	
 	public static ConfigurationWrapper getInstance() {
 		if(instance != null) {
 			return instance;
 		}
 		else {
 			instance = new ConfigurationWrapper();
+			instance.load_from_from_db();
 			return instance;
 		}
 	}
