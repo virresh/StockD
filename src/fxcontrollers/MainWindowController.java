@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import main.FxApp;
@@ -42,12 +43,19 @@ public class MainWindowController implements Initializable {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/SettingsWindow.fxml"));
 	        Parent otherroot = loader.load();
 	        Stage stage = new Stage();
+	        Stage primaryStage = (Stage) mainroot.getScene().getWindow();
 	        stage.setScene(new Scene(otherroot));
-	        stage.show();
+	        
+	        stage.initModality(Modality.WINDOW_MODAL);
+	        stage.initOwner(primaryStage);
+	        
 	        SettingWindowController prefController = loader.getController();
 	        
 	        // reference: https://stackoverflow.com/a/52234104/9374197
 	        stage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, prefController::shutdown);
+	        
+	        stage.show();
+
 	    } catch(Exception e) {
 	    	e.printStackTrace();
 	        FxApp.logger.log(Level.SEVERE, "Cannot open Preferences Window!");

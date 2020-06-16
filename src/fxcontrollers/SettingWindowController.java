@@ -128,7 +128,9 @@ public class SettingWindowController implements Initializable {
             		String.format("There are some unsaved changes. " + 
             					  "Do you wish to save them? If you don't save them, " +
             					  "they will be applied to only this session. " + 
-            					  "Restarting will reset them to original values."));
+            					  "Restarting will reset them to original values. " + 
+            					  "Saving to disk might take a while, so please be patient."
+            					  ));
 //            alert.initOwner(primaryStage.getOwner());
             Optional<ButtonType> res = alert.showAndWait();
 
