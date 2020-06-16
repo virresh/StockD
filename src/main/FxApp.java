@@ -40,13 +40,13 @@ import javafx.stage.Stage;
 import models.ConfigurationWrapper;
 
 public class FxApp extends Application {
-	private static Logger logger;
+	public static Logger logger;
 
 	@Override
 	public void start(Stage primaryStage) {
 		Parent root = null;
 		try {
-			root = FXMLLoader.load(getClass().getResource("/SettingsWindow.fxml"));
+			root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
 		} catch (IOException e) {
 			logger.log(Level.FINER, e.getMessage(), e);
 			System.out.println(e);

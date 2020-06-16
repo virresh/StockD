@@ -61,6 +61,18 @@ public class ConfigurationWrapper {
 		base_links = s;
 	}
 	
+	public void update_one_setting(Setting s) {
+		
+	}
+	
+	public void update_one_links(Link s) {
+		
+	}
+	
+	public void update_one_baselink(BaseLink s) {
+		
+	}
+	
 	public void override_and_save_to_db() throws SQLException {
 		if(all_settings != null) {
 			for(Setting s: all_settings) {

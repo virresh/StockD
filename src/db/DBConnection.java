@@ -11,11 +11,12 @@ import org.sql2o.Sql2o;
 
 import common.Constants;
 import common.Queries;
+import main.FxApp;
 
 
 public class DBConnection {
 	private static Sql2o ds = null;
-	private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private static Logger logger = FxApp.logger;
 	// Replace data source with sql2o. Thus, if connection is made once, it'll never fail
 	// on subsequent tries
 	private static void initDataSource() throws SQLException{

@@ -2,11 +2,14 @@ package fxcontrollers;
 
 import java.io.File;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -22,7 +25,9 @@ import models.BaseLink;
 import models.ConfigurationWrapper;
 import models.Setting;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
@@ -33,8 +38,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
+import main.FxApp;
 
 public class SettingWindowController implements Initializable {
+	
+	private static Boolean changed=false;
 
     @FXML
     private JFXTabPane configuration_tab;
@@ -62,11 +71,24 @@ public class SettingWindowController implements Initializable {
 		chkbox.setTooltip(new Tooltip(s.getSETTING_NAME()));
 		chkbox.setPadding(new Insets(10));
 		chkbox.setSelected(s.getSETTING_VALUE().equals("true"));
+		chkbox.setOnAction(
+				new EventHandler<ActionEvent>() {
+					@Override
+					public void handle(ActionEvent event) {
+						SettingWindowController.changed = true;
+						if(chkbox.isSelected()) {
+							s.setSETTING_VALUE("true");
+						}
+						else {
+							s.setSETTING_VALUE("false");
+						}
+					}
+				});
 		return chkbox;
     }
     
     private Node make_directory(Setting s) {
-    	FlowPane labelCombo = new FlowPane(20.0, 20.0);
+    	FlowPane labelCombo = new FlowPane(20.0, 5.0);
     	
     	TextField txtfield = new TextField(s.getSETTING_VALUE());
     	txtfield.setTooltip(new Tooltip(s.getSETTING_NAME()));
@@ -84,12 +106,44 @@ public class SettingWindowController implements Initializable {
 								);
 						if(f!=null) {
 							txtfield.setText(f.getAbsolutePath());
+							SettingWindowController.changed = true;
 						}
 					}
 				});
     	
     	labelCombo.getChildren().addAll(fieldname, txtfield, bchoose);
 		return labelCombo;
+    }
+    
+    public void shutdown(WindowEvent event) {
+        if(SettingWindowController.changed) {  
+        	// if the configuration has changed, alert the user with a popup
+        	// referenced from: https://stackoverflow.com/a/52234104/9374197
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.getButtonTypes().remove(ButtonType.OK);
+            alert.getButtonTypes().add(ButtonType.NO);
+            alert.getButtonTypes().add(ButtonType.YES);
+            alert.setTitle("Save Changes?");
+            alert.setContentText(
+            		String.format("There are some unsaved changes. " + 
+            					  "Do you wish to save them? If you don't save them, " +
+            					  "they will be applied to only this session. " + 
+            					  "Restarting will reset them to original values."));
+//            alert.initOwner(primaryStage.getOwner());
+            Optional<ButtonType> res = alert.showAndWait();
+
+            if(res.isPresent()) {
+                if(res.get().equals(ButtonType.YES)) {
+                    try {
+            			ConfigurationWrapper.getInstance().override_and_save_to_db();
+            		} catch (SQLException e) {
+            			e.printStackTrace();
+            			FxApp.logger.log(Level.SEVERE, "Failed to save configuration");
+            			FxApp.logger.log(Level.SEVERE, e.getMessage());
+            		}
+                }
+            }
+        }
     }
     
 	@Override
