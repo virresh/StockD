@@ -25,8 +25,8 @@
                                              <children>
                                                 <HBox prefHeight="40.0" prefWidth="490.0" spacing="20.0">
                                                    <children>
-                                                      <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="234.0" text="Check All" />
-                                                      <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="234.0" text="Uncheck All" />
+                                                      <Button mnemonicParsing="false" onAction="#check_all" prefHeight="109.0" prefWidth="234.0" text="Check All" />
+                                                      <Button mnemonicParsing="false" onAction="#uncheck_all" prefHeight="109.0" prefWidth="234.0" text="Uncheck All" />
                                                    </children>
                                                 </HBox>
                                              </children></FlowPane>

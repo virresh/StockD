@@ -35,6 +35,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -115,6 +116,52 @@ public class SettingWindowController implements Initializable {
 		return labelCombo;
     }
     
+    public void check_all(ActionEvent event) {
+    	if(event.getSource() instanceof Button) {
+    		Button b = (Button) event.getSource();
+    		Node parent = b;
+    		while(!(parent instanceof FlowPane)) {
+    			parent = parent.getParent();
+    		}
+    		FlowPane parentpane = (FlowPane)parent;
+    		for(Node ch: parentpane.getChildren()) {
+    			if(ch instanceof GridPane) {
+    				for(Node c: ((GridPane) ch).getChildren()) {
+    	    			if(c instanceof JFXCheckBox) {
+    	    				JFXCheckBox chkbx = (JFXCheckBox) c;
+    	    				if(!chkbx.isSelected()) {
+    	    					chkbx.fire();
+    	    				}
+    	    			}
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    public void uncheck_all(ActionEvent event) {
+    	if(event.getSource() instanceof Button) {
+    		Button b = (Button) event.getSource();
+    		Node parent = b;
+    		while(!(parent instanceof FlowPane)) {
+    			parent = parent.getParent();
+    		}
+    		FlowPane parentpane = (FlowPane)parent;
+    		for(Node ch: parentpane.getChildren()) {
+    			if(ch instanceof GridPane) {
+    				for(Node c: ((GridPane) ch).getChildren()) {
+    	    			if(c instanceof JFXCheckBox) {
+    	    				JFXCheckBox chkbx = (JFXCheckBox) c;
+    	    				if(chkbx.isSelected()) {
+    	    					chkbx.fire();
+    	    				}
+    	    			}
+    				}
+    			}
+    		}
+    	}
+    }
+    
     public void shutdown(WindowEvent event) {
         if(SettingWindowController.changed) {  
         	// if the configuration has changed, alert the user with a popup
@@ -138,6 +185,7 @@ public class SettingWindowController implements Initializable {
                 if(res.get().equals(ButtonType.YES)) {
                     try {
             			ConfigurationWrapper.getInstance().override_and_save_to_db();
+            			SettingWindowController.changed = false;
             		} catch (SQLException e) {
             			e.printStackTrace();
             			FxApp.logger.log(Level.SEVERE, "Failed to save configuration");
