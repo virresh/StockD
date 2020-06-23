@@ -5,3 +5,7 @@
 /derby.log
 app.log*
 /stockdb/
+Equity/
+Futures/
+Indices/
+Consolidated/
