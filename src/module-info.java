@@ -20,4 +20,5 @@ module StockD {
 	requires sql2o;
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.core;
+	requires tablesaw.core;
 }

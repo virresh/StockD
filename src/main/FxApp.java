@@ -27,17 +27,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import org.sql2o.Connection;
 import org.sql2o.Sql2oException;
 
-import common.JSONUtils;
-import db.DBConnection;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.ConfigurationWrapper;
+import parsers.ParseEQ;
+import parsers.ParseFO;
+import parsers.ParseIndices;
 
 public class FxApp extends Application {
 	public static Logger logger;
@@ -59,12 +59,14 @@ public class FxApp extends Application {
 	}
 	
     public static void main(String[] args) {
+    	FileHandler fh = null;
     	try {
 	    	//// Setup logging facilities
     		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	    	FileHandler fh = new FileHandler(System.getProperty("user.dir") + "/app.log", true);
+	    	fh = new FileHandler(System.getProperty("user.dir") + "/app.log", true);
 	    	SimpleFormatter formatter = new SimpleFormatter();
 	    	fh.setFormatter(formatter);
+	    	logger.addHandler(fh);
 	    	
 	    	//// Setup temporary directory
 	    	File dir = new File(System.getProperty("user.dir")+"/Temp");
@@ -85,11 +87,14 @@ public class FxApp extends Application {
 	    		launch();    		
 	    	}
 	    	else {
+//	    		ParseEQ p = new ParseEQ(System.getProperty("user.dir") + "/Equity/");
+//	    		ParseFO p = new ParseFO(System.getProperty("user.dir") + "/Futures/");
+//	    		ParseIndices p = new ParseIndices("./Indices/");
+//	    		p.parse("/home/viresh/Desktop/test_nse/ind_close_all_18062020.csv");
 	    		for(int i=0; i<args.length; i++) {
 	    			if(args[i].equals("-h") || args[i].equals("--help")) {
 	    				System.out.println("Usage: ./StockD <From Date: DD/MM/YYYY> <To Date: DD/MM/YYYY>");
 	    				System.out.println("All configurations must be set from GUI.");
-	    				System.exit(0);
 	    			}
 	    		}
 	    		System.out.println("Console Mode to be implemented!");
@@ -102,6 +107,7 @@ public class FxApp extends Application {
     			logger.log(Level.SEVERE, ex.getMessage(), ex);
     		}
     		ex.printStackTrace();
+
     		System.exit(0);
     	}
     	catch(Exception ex) {
@@ -110,5 +116,10 @@ public class FxApp extends Application {
     		ex.printStackTrace();
     		System.exit(0);
     	}
+    	finally {
+    		if(fh != null) {
+    			fh.close();    			
+    		}
+		}
     }
 }
