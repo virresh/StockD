@@ -13,6 +13,8 @@ public class RunContext {
 	private boolean FO_add_I_prefix;
 	private boolean consolidateBhavCopy;
 	private boolean skip_weekends;
+	
+	
 	private static RunContext sinstance;
 	private HashSet<String> indexesInUse;
 	private String eqDir;

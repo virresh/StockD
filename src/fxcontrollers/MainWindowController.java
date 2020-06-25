@@ -79,9 +79,9 @@ public class MainWindowController implements Initializable {
 			ParseFO p = new ParseFO("./Futures");
 			FileDownloader fd = new FileDownloader(rt.getTemp().getAbsolutePath());
 //			String dlink = "https://archives.nseindia.com/content/historical/EQUITIES/2020/MAY/cm05MAY2020bhav.csv.zip";
-//			String dlink = "https://archives.nseindia.com/content/historical/DERIVATIVES/2020/JUN/fo24JUN2020bhav.csv.zip";
+			String dlink = "https://archives.nseindia.com/content/historical/DERIVATIVES/2020/JUN/fo24JUN2020bhav.csv.zip";
 //			String dlink = "https://archives.nseindia.com/content/indices/ind_close_all_23062020.csv";
-			String dlink = "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22F%26O%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22derivatives%22%2C%22section%22%3A%22equity%22%7D%5D&date=03-Jun-2020&type=equity&mode=single";
+//			String dlink = "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22F%26O%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22derivatives%22%2C%22section%22%3A%22equity%22%7D%5D&date=03-Jun-2020&type=equity&mode=single";
 			fd.DownloadFile(dlink, p);
 		} catch (Exception e) {
 			FxApp.logger.log(Level.SEVERE, "Could not parse given link.");

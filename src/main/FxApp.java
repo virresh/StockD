@@ -70,9 +70,9 @@ public class FxApp extends Application {
 //	                "%1$tF %1$tT [%4$-7s][%2$s] %5$s %6$s%n");
 	    	logger.addHandler(fh);
 	    	
-	    	System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
-	    	System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
-	    	System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
+//	    	System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
+//	    	System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+//	    	System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 	    	
 	    	//// Setup Configuration
 	    	ConfigurationWrapper configs = ConfigurationWrapper.getInstance();

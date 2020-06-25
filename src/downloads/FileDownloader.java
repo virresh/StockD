@@ -5,19 +5,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.time.Duration;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,11 +23,14 @@ import org.apache.http.impl.client.LaxRedirectStrategy;
 
 import main.FxApp;
 import parsers.BaseConverter;
+import tech.tablesaw.api.Table;
 
 /**
  * 
  * @author viresh
- * Official Website js
+ * 
+ * Official Website uses below js function
+ * 
 function SingledownloadReports(id, type, _this) {
     var downloadData = [];
     //#cr_equity_daily
@@ -42,8 +39,10 @@ function SingledownloadReports(id, type, _this) {
     downloadData.push(obj);
     fileDownload(downloadData, type, id, "single");
 }
-
  *
+ * So a possible future improvement would be to switch to json based api for data
+ * However no documentation on this api is available, so I'm just making a special purpose HTTP client
+ * which can deal with get links of this api
  */
 
 public class FileDownloader {
@@ -53,7 +52,7 @@ public class FileDownloader {
 		this.tempdir = templocation;
 	}
 	
-	public void DownloadFile(String link, BaseConverter parser) throws IOException {
+	public Table DownloadFile(String link, BaseConverter parser) throws IOException {
 		boolean unzip = false;
 		String localname = "test";
 		
@@ -72,7 +71,7 @@ public class FileDownloader {
 		
 		if(entity == null) {
 			FxApp.logger.log(Level.SEVERE, "Cannot fetch file.");
-			return;
+			return null;
 		}
 		else {
 			unzip = entity.getContentType().getValue().equalsIgnoreCase("application/zip");
@@ -95,10 +94,10 @@ public class FileDownloader {
 				int lastSlashIndex = link.lastIndexOf('/');
 		        if (lastSlashIndex >= 0 && lastSlashIndex < link.length() - 1) {
 		        	if(unzip == true) {
-		        		localname = link.substring(lastSlashIndex, link.length()-4);
+		        		localname = link.substring(lastSlashIndex+1, link.length()-4);
 		        	}
 		        	else {
-		        		localname = link.substring(lastSlashIndex);
+		        		localname = link.substring(lastSlashIndex+1);
 		        	}
 				}
 			}
@@ -112,12 +111,33 @@ public class FileDownloader {
 		inp = hresp.getEntity().getContent();
 
         if(unzip) {
+        	boolean didExtraction = false;
 			ZipInputStream zipstream = new ZipInputStream(inp);
-		    int count=0;
-		    byte[] b1 = new byte[1000];
-		    while((count = zipstream.read(b1)) != -1) {
-		    	out.write(b1, 0, count);
-		    }
+			ZipEntry zent = null;
+			while((zent = zipstream.getNextEntry())!=null) {
+				if(zent.isDirectory()) {
+					continue;
+				}
+				String fileName = zent.getName();
+				if(fileName.contains("/")) {
+					//If the path is like /PR/abc.zip
+					String[] splittedNames = zent.getName().split("/");
+					fileName=splittedNames[splittedNames.length-1];
+				}
+				if(fileName.equals(localname)) {
+				    int count=0;
+				    byte[] b1 = new byte[1000];
+				    while((count = zipstream.read(b1)) != -1) {
+				    	out.write(b1, 0, count);
+				    }
+				    didExtraction = true;
+				    break;
+				}
+			}
+			if(!didExtraction) {
+				FxApp.logger.log(Level.SEVERE, "Unsupported ZIP format. Skipping.");
+				return null;
+			}
 		}
 		else {
 		    int count=0;
@@ -128,12 +148,15 @@ public class FileDownloader {
 		}
 		out.close();
 		
+		Table t = null;
+		
 		try {
-			parser.parse(outfile.getAbsolutePath());
+			t = parser.parse(outfile.getAbsolutePath());
 		} catch (Exception e) {
 			FxApp.logger.log(Level.SEVERE, "Cannot process file " + outfile.getAbsolutePath());
 			FxApp.logger.log(Level.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}
+		return t;
 	}
 }
