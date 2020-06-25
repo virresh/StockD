@@ -50,7 +50,7 @@
                                        </children></AnchorPane>
                                 </content>
                               </Tab>
-                              <Tab text="Currency">
+                              <Tab disable="true" text="Currency">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>
@@ -58,7 +58,7 @@
                                        </children></AnchorPane>
                                 </content>
                               </Tab>
-                              <Tab text="Options">
+                              <Tab disable="true" text="Options">
                                 <content>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                        <children>

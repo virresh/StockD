@@ -21,4 +21,7 @@ module StockD {
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.core;
 	requires tablesaw.core;
+	requires java.net.http;
+	requires org.apache.httpcomponents.httpclient;
+	requires org.apache.httpcomponents.httpcore;
 }

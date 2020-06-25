@@ -1,5 +1,6 @@
 package common;
 
+import java.io.File;
 import java.util.HashSet;
 
 import models.BaseLink;
@@ -24,6 +25,8 @@ public class RunContext {
 	Link indicesBhavCopy;
 	
 	BaseLink base;
+	
+	File temp;
 	
 	public void updateContext() {
 		for(Setting s: ConfigurationWrapper.getInstance().get_all_settings()) {
@@ -78,6 +81,19 @@ public class RunContext {
 		this.skip_weekends = true;
 		this.indexesInUse = new HashSet<String>();	
 		updateContext();
+		
+    	//// Setup temporary directory
+    	File dir = new File(System.getProperty("user.dir")+"/Temp");
+    	if(!dir.exists()) {
+    		dir.mkdir();
+    	}
+    	else {
+			File[] tempFiles = dir.listFiles();
+			for (int i = 0; i < tempFiles.length; i++) {
+				tempFiles[i].delete();
+			}
+    	}
+    	this.temp = dir;
 	}
 	
 	public static RunContext getContext() {
@@ -129,5 +145,13 @@ public class RunContext {
 	
 	public String getIndicesLink() {
 		return this.base.getBASE_URL() + this.indicesBhavCopy.getPRODUCT_LINK();
+	}
+
+	public File getTemp() {
+		return temp;
+	}
+
+	public void setTemp(File temp) {
+		this.temp = temp;
 	}
 }

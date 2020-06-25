@@ -96,7 +96,7 @@
                <children>
                   <AnchorPane>
                      <children>
-                        <JFXButton accessibleText="Download Button" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" defaultButton="true" layoutX="218.0" prefWidth="160.0" style="-jfx-button-type: RAISED; -jfx-disable-visual-focus: false; -fx-border-color: rgba(0,0,0,25); -fx-background-color: rgba(200, 200, 200, 255);" text="Download" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="222.0" AnchorPane.topAnchor="0.0">
+                        <JFXButton accessibleText="Download Button" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" defaultButton="true" layoutX="218.0" onAction="#startdownload" prefWidth="160.0" style="-jfx-button-type: RAISED; -jfx-disable-visual-focus: false; -fx-border-color: rgba(0,0,0,25); -fx-background-color: rgba(200, 200, 200, 255);" text="Download" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="222.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font size="18.0" />
                            </font>
@@ -107,7 +107,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <JFXTextArea layoutX="1.0" layoutY="199.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0" />
+      <JFXTextArea fx:id="messages" layoutX="1.0" layoutY="199.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0" />
    </children>
    <opaqueInsets>
       <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />

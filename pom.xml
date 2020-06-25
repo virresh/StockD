@@ -84,6 +84,12 @@
 	    <artifactId>tablesaw-core</artifactId>
 	    <version>0.38.1</version>
 	</dependency>
+	<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+	<dependency>
+	    <groupId>org.apache.httpcomponents</groupId>
+	    <artifactId>httpclient</artifactId>
+	    <version>4.5.12</version>
+	</dependency>
 	<!-- https://mvnrepository.com/artifact/org.apache.derby/derby -->
 	<dependency>
 	    <groupId>org.apache.derby</groupId>

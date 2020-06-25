@@ -48,7 +48,7 @@ public class FxApp extends Application {
 		try {
 			root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
 		} catch (IOException e) {
-			logger.log(Level.FINER, e.getMessage(), e);
+			logger.log(Level.FINEST, e.getMessage(), e);
 			System.out.println(e);
 			e.printStackTrace();
 		}
@@ -66,19 +66,13 @@ public class FxApp extends Application {
 	    	fh = new FileHandler(System.getProperty("user.dir") + "/app.log", true);
 	    	SimpleFormatter formatter = new SimpleFormatter();
 	    	fh.setFormatter(formatter);
+//	    	System.setProperty("java.util.logging.SimpleFormatter.format",
+//	                "%1$tF %1$tT [%4$-7s][%2$s] %5$s %6$s%n");
 	    	logger.addHandler(fh);
 	    	
-	    	//// Setup temporary directory
-	    	File dir = new File(System.getProperty("user.dir")+"/Temp");
-	    	if(!dir.exists()) {
-	    		dir.mkdir();
-	    	}
-	    	else {
-				File[] tempFiles = dir.listFiles();
-				for (int i = 0; i < tempFiles.length; i++) {
-					tempFiles[i].delete();
-				}
-	    	}
+	    	System.setProperty("org.apache.commons.logging.Log","org.apache.commons.logging.impl.SimpleLog");
+	    	System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
+	    	System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 	    	
 	    	//// Setup Configuration
 	    	ConfigurationWrapper configs = ConfigurationWrapper.getInstance();
@@ -87,10 +81,6 @@ public class FxApp extends Application {
 	    		launch();    		
 	    	}
 	    	else {
-//	    		ParseEQ p = new ParseEQ(System.getProperty("user.dir") + "/Equity/");
-//	    		ParseFO p = new ParseFO(System.getProperty("user.dir") + "/Futures/");
-//	    		ParseIndices p = new ParseIndices("./Indices/");
-//	    		p.parse("/home/viresh/Desktop/test_nse/ind_close_all_18062020.csv");
 	    		for(int i=0; i<args.length; i++) {
 	    			if(args[i].equals("-h") || args[i].equals("--help")) {
 	    				System.out.println("Usage: ./StockD <From Date: DD/MM/YYYY> <To Date: DD/MM/YYYY>");
@@ -104,16 +94,17 @@ public class FxApp extends Application {
     	catch(Sql2oException ex) {
     		if(ex.getMessage().contains("Could not acquire a connection from DataSource")) {
     			logger.log(Level.SEVERE, "Failed to connect to settings store. Probably another instance is already running");
-    			logger.log(Level.SEVERE, ex.getMessage(), ex);
+    			logger.log(Level.FINEST, ex.getMessage(), ex);
     		}
-    		ex.printStackTrace();
-
+//    		ex.printStackTrace();
     		System.exit(0);
     	}
     	catch(Exception ex) {
-    		System.out.println("Fatal Error:");
-    		System.out.println(ex.getMessage());
-    		ex.printStackTrace();
+			logger.log(Level.SEVERE, "Fatal Error.");
+			logger.log(Level.FINEST, ex.getMessage(), ex);
+//    		System.out.println("Fatal Error:");
+//    		System.out.println(ex.getMessage());
+//    		ex.printStackTrace();
     		System.exit(0);
     	}
     	finally {
