@@ -17,6 +17,8 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.CookieSpecs;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.LaxRedirectStrategy;
@@ -63,6 +65,11 @@ public class FileDownloader {
 		hget.addHeader("Accept", "*/*");
 		HttpClient hclient = HttpClientBuilder.create()
 											  .setRedirectStrategy(new LaxRedirectStrategy())
+											  .setDefaultRequestConfig(
+													  RequestConfig
+													  .custom()
+													  .setCookieSpec(CookieSpecs.STANDARD)
+													  .build())
 											  .setUserAgent("Java Client")
 											  .build();
 		
