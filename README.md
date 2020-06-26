@@ -1,4 +1,6 @@
 # StockD
+[![Join the chat at https://gitter.im/virresh/StockD](https://badges.gitter.im/virresh/StockD.svg)](https://gitter.im/virresh/StockD?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 EOD Stock data downloader
 
 ## Features
@@ -17,7 +19,7 @@ However, if you're downloading lots of data, be mindful of NSE's server's bandwi
     - Download large amounts of data only during off-market hours. I recommend night time.
     - Downloading a day or even a week's data is fine. It's not a terribly large amount of data
 - Where to get help?  
-I welcome everyone to join in the gitter chatroom and help each other out.
+I welcome everyone to join in the [gitter chatroom](https://gitter.im/virresh/StockD) and help each other out.
 
 Steps to run:  
 ```
