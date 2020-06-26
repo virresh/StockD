@@ -16,6 +16,8 @@ It's extremely fast in my experience. I was able to download ~5 years of data in
 However, if you're downloading lots of data, be mindful of NSE's server's bandwidth. NSE has two servers, the main server (www.nse...) and the old server (www1.nse...). The new server is extremely fast, but I advise every user to be respectful of their usage. Some general points would be:  
     - Download large amounts of data only during off-market hours. I recommend night time.
     - Downloading a day or even a week's data is fine. It's not a terribly large amount of data
+- Where to get help?  
+I welcome everyone to join in the gitter chatroom and help each other out.
 
 Steps to run:  
 ```

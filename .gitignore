@@ -7,6 +7,6 @@ app.log*
 /stockdb/
 Equity/
 Futures/
-Indices/
+Index/
 Consolidated/
 Temp/
