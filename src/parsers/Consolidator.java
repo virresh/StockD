@@ -1,13 +1,8 @@
 package parsers;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
 
-import common.Constants;
-import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
 import tech.tablesaw.io.csv.CsvWriteOptions;
@@ -25,7 +20,19 @@ public class Consolidator extends BaseConverter {
 
 	@Override
 	public Table parse(String suffix) throws Exception {
-		Table df = Table.create();
+		Table df = Table.create("consolidated");
+		df.addColumns(
+				StringColumn.create("SYMBOL"),
+				StringColumn.create("TIMESTAMP"),
+				StringColumn.create("OPEN"),
+				StringColumn.create("HIGH"),
+				StringColumn.create("LOW"),
+				StringColumn.create("CLOSE"),
+				StringColumn.create("VOLUME"),
+				StringColumn.create("OPEN INTEREST"));
+		
+//		System.out.println(this.ind.structure());
+		
 		if(this.eq != null){
 			for(int i=0; i<this.eq.rowCount(); i++) {
 				df.addRow(this.eq.row(i));

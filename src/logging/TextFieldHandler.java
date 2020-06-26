@@ -4,19 +4,17 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import com.jfoenix.controls.JFXTextArea;
-
 public class TextFieldHandler extends Handler{
-	JFXTextArea ta;
+	DisplayMessageListener dml;
 
-	public TextFieldHandler(JFXTextArea tarea) {
-		this.ta = tarea;
+	public TextFieldHandler(DisplayMessageListener dml) {
+		this.dml = dml;
 	}
 
 	@Override
 	public void publish(LogRecord record) {
 		if(record.getMessage() != null && record.getLevel() != Level.FINEST) {
-			this.ta.appendText(record.getMessage() + "\n");
+			dml.newMessage(record.getMessage() + "\n");
 		}
 	}
 
@@ -26,6 +24,6 @@ public class TextFieldHandler extends Handler{
 
 	@Override
 	public void close() throws SecurityException {
-		this.ta.appendText("Thanks for using StockD!");
+		dml.newMessage("Thanks for using StockD!");
 	}
 }

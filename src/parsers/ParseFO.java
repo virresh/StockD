@@ -8,8 +8,10 @@ import java.nio.file.Paths;
 
 import common.Constants;
 import common.RunContext;
+import tech.tablesaw.api.ColumnType;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+import tech.tablesaw.io.csv.CsvReadOptions;
 import tech.tablesaw.io.csv.CsvWriteOptions;
 
 public class ParseFO extends BaseConverter {
@@ -35,9 +37,32 @@ public class ParseFO extends BaseConverter {
 	public Table parse(String filePath) throws Exception {
 		File f = Paths.get(filePath).toFile();
 		InputStream instream = new FileInputStream(f);
+		
+		ColumnType[] columnTypes = {
+				ColumnType.STRING,     // 0     INSTRUMENT  
+				ColumnType.STRING,     // 1     SYMBOL      
+				ColumnType.SKIP, // 2     EXPIRY_DT   
+				ColumnType.SKIP,     // 3     STRIKE_PR   
+				ColumnType.SKIP,     // 4     OPTION_TYP  
+				ColumnType.STRING,     // 5     OPEN        
+				ColumnType.STRING,     // 6     HIGH        
+				ColumnType.STRING,     // 7     LOW         
+				ColumnType.STRING,     // 8     CLOSE       
+				ColumnType.SKIP,     // 9     SETTLE_PR   
+				ColumnType.SKIP,    // 10    CONTRACTS   
+				ColumnType.STRING,     // 11    VAL_INLAKH  
+				ColumnType.STRING,    // 12    OPEN_INT    
+				ColumnType.SKIP,    // 13    CHG_IN_OI   
+				ColumnType.STRING,     // 14    TIMESTAMP   
+				ColumnType.SKIP,     // 15    C15         
+		};
+
 		Table df = Table
 				   .read()
-				   .csv(instream)
+				   .usingOptions(
+						   CsvReadOptions
+						   .builder(instream)
+						   .columnTypes(columnTypes))
 				   .retainColumns("SYMBOL", "TIMESTAMP", "OPEN", "HIGH", "LOW", "CLOSE", "VAL_INLAKH", "OPEN_INT", "INSTRUMENT");
 
 		df = df.dropWhere(df.column("INSTRUMENT")

@@ -9,6 +9,8 @@ EOD Stock data downloader
 - Can use custom profiles for links and settings
 
 ## F.A.Q
+- Who provides this data?  
+The data provided can be set using given profiles. All the current profiles fetch data from Official NSE website. You may be able to use other community-supplied profiles as well.
 - Selecting less indices still downloads data of all scripts?  
 Yes. Indices are seperate from equity data. It is not feasible to download selected scrips only, instead it's way faster to download all data. Selecting indices only works when downloading data of indices, not scrips.
 - Can't download data?  

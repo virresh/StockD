@@ -19,9 +19,7 @@
 
 package main;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,18 +27,14 @@ import java.util.logging.SimpleFormatter;
 
 import org.sql2o.Sql2oException;
 
-import common.JSONUtils;
-import common.RunContext;
+import fxcontrollers.MainWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import models.ConfigurationWrapper;
-import models.Link;
-import parsers.ParseEQ;
-import parsers.ParseFO;
-import parsers.ParseIndices;
 
 public class FxApp extends Application {
 	public static Logger logger;
@@ -48,8 +42,9 @@ public class FxApp extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		Parent root = null;
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainWindow.fxml"));
 		try {
-			root = FXMLLoader.load(getClass().getResource("/MainWindow.fxml"));
+			root = loader.load();
 		} catch (IOException e) {
 			logger.log(Level.FINEST, e.getMessage(), e);
 			System.out.println(e);
@@ -58,6 +53,10 @@ public class FxApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("StockD - Stock Data Downloader");
+        
+        // reference: https://stackoverflow.com/a/52234104/9374197
+        MainWindowController mwinc = loader.getController();
+        primaryStage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, mwinc::shutdown);
         primaryStage.show();
 	}
 	

@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXScrollPane?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
@@ -95,6 +96,7 @@
             </VBox>
             <VBox layoutX="5.0" layoutY="104.0" prefWidth="600.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="-5.0">
                <children>
+                  <JFXProgressBar fx:id="pbar" prefHeight="13.0" prefWidth="594.0" progress="1.0" />
                   <AnchorPane>
                      <children>
                         <JFXButton accessibleText="Download Button" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" defaultButton="true" layoutX="218.0" onAction="#startdownload" prefWidth="160.0" style="-jfx-button-type: RAISED; -jfx-disable-visual-focus: false; -fx-border-color: rgba(0,0,0,25); -fx-background-color: rgba(200, 200, 200, 255);" text="Download" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="218.0" AnchorPane.rightAnchor="222.0" AnchorPane.topAnchor="0.0">
@@ -108,7 +110,7 @@
             </VBox>
          </children>
       </AnchorPane>
-      <JFXScrollPane layoutY="198.0" prefHeight="157.0" prefWidth="600.0">
+      <JFXScrollPane layoutY="198.0" prefHeight="320.0" prefWidth="600.0">
          <children>
             <JFXTextArea fx:id="messages" editable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" />
          </children>

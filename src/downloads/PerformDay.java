@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.logging.Level;
 
+import common.Constants;
 import common.RunContext;
 import main.FxApp;
 import parsers.Consolidator;
@@ -71,9 +72,8 @@ public class PerformDay {
 		if(rt.isConsolidateBhavCopy()) {
 			try {
 				Consolidator p = new Consolidator(rt.getConsolidatedDir(), eq, fu, in);
-				String link = rt.getIndicesLink();
-				String downloadlink = String.format(link, this.date);
-		    	fd.DownloadFile(downloadlink, p);
+//		    	fd.DownloadFile(Constants.getDateFormat(this.date, Constants.YYYYMMDDformat), p);
+				p.parse(Constants.getDateFormat(this.date, Constants.YYYYMMDDformat));
 			} catch (Exception e) {
 				FxApp.logger.log(Level.INFO, "Failed to consolidate files for " + ld.toString());
 				FxApp.logger.log(Level.FINEST, e.getMessage(), e);

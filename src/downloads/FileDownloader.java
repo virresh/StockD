@@ -69,8 +69,8 @@ public class FileDownloader {
 		HttpResponse hresp = hclient.execute(hget);
 		HttpEntity entity = hresp.getEntity();
 		
-		if(entity == null) {
-			FxApp.logger.log(Level.SEVERE, "Cannot fetch file.");
+		if(entity == null || hresp.getStatusLine().getStatusCode() != 200) {
+			FxApp.logger.log(Level.INFO, "Cannot fetch file.");
 			return null;
 		}
 		else {

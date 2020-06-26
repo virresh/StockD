@@ -47,7 +47,7 @@ public class RunContext {
 					indicesDir = s.getSETTING_VALUE();
 				}
 				else if(s.getSETTING_NAME().equals("Consolidated Bhavcopy Directory")) {
-					consolidatedDir = s.getSETTING_NAME();
+					consolidatedDir = s.getSETTING_VALUE();
 				}
 			}
 			else if(s.getSETTING_TYPE().equals("checkbox")) {
@@ -65,6 +65,9 @@ public class RunContext {
 				}
 				else if(s.getSETTING_NAME().equals("Futures Bhavcopy")) {
 					this.doFutures = (s.getSETTING_VALUE().equals("true"))?true:false;
+				}
+				else if(s.getSETTING_NAME().equals("Create consolidated Bhavcopy")) {
+					this.consolidateBhavCopy = (s.getSETTING_VALUE().equals("true"))?true:false;
 				}
 			}
 		}

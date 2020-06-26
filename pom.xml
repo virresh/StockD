@@ -58,6 +58,8 @@
                   <option>javafx.graphics/com.sun.javafx.stage=com.jfoenix</option>
                   <option>--add-exports</option>
                   <option>javafx.base/com.sun.javafx.event=com.jfoenix</option>
+                  <option>--add-exports</option>
+                  <option>javafx.graphics/com.sun.javafx.scene=com.jfoenix</option>
               </options>
         </configuration>
       </plugin>

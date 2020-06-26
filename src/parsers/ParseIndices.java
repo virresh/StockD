@@ -13,9 +13,10 @@ import java.util.logging.Level;
 import common.Constants;
 import common.RunContext;
 import main.FxApp;
-import tech.tablesaw.api.DoubleColumn;
+import tech.tablesaw.api.ColumnType;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
+import tech.tablesaw.io.csv.CsvReadOptions;
 import tech.tablesaw.io.csv.CsvWriteOptions;
 
 public class ParseIndices extends BaseConverter {
@@ -34,18 +35,44 @@ public class ParseIndices extends BaseConverter {
 			f.delete();
 			return null;
 		}
+		
+//		if(true) {
+//			String stypes = new CsvReader().printColumnTypes(CsvReadOptions.builder(instream).build());
+//			System.out.println(stypes);
+//			return null;
+//		}
+		
+		ColumnType[] columnTypes = {
+				ColumnType.STRING,     // 0     Index Name          
+				ColumnType.STRING,     // 1     Index Date          
+				ColumnType.STRING,     // 2     Open Index Value    
+				ColumnType.STRING,     // 3     High Index Value    
+				ColumnType.STRING,     // 4     Low Index Value     
+				ColumnType.STRING,     // 5     Closing Index Value 
+				ColumnType.SKIP,     // 6     Points Change       
+				ColumnType.SKIP,     // 7     Change(%)           
+				ColumnType.STRING,     // 8     Volume              
+				ColumnType.SKIP,     // 9     Turnover (Rs. Cr.)  
+				ColumnType.SKIP,     // 10    P/E                 
+				ColumnType.SKIP,     // 11    P/B                 
+				ColumnType.SKIP,     // 12    Div Yield           
+			};
+
 		Table df = Table
 				   .read()
-				   .csv(instream)
+				   .usingOptions(
+						   CsvReadOptions
+						   .builder(instream)
+						   .columnTypes(columnTypes))
 				   .retainColumns("Index Name", "Index Date", "Open Index Value", "High Index Value", "Low Index Value", "Closing Index Value", "Volume");
 		
 		List<Integer> rowIdx = new ArrayList<Integer>();
 
-		df.replaceColumn(df.column("Open Index Value").asStringColumn().replaceAll("-", "0").setName("Open Index Value"));
-		df.replaceColumn(df.column("High Index Value").asStringColumn().replaceAll("-", "0").setName("High Index Value"));
-		df.replaceColumn(df.column("Low Index Value").asStringColumn().replaceAll("-", "0").setName("Low Index Value"));
-		df.replaceColumn(df.column("Closing Index Value").asStringColumn().replaceAll("-", "0").setName("Closing Index Value"));
-		df.replaceColumn(df.column("Volume").asStringColumn().replaceAll("-", "0").setName("Volume"));
+		df.replaceColumn(df.column("Open Index Value").asStringColumn().replaceAll("-", "0.0").setName("Open Index Value"));
+		df.replaceColumn(df.column("High Index Value").asStringColumn().replaceAll("-", "0.0").setName("High Index Value"));
+		df.replaceColumn(df.column("Low Index Value").asStringColumn().replaceAll("-", "0.0").setName("Low Index Value"));
+		df.replaceColumn(df.column("Closing Index Value").asStringColumn().replaceAll("-", "0.0").setName("Closing Index Value"));
+		df.replaceColumn(df.column("Volume").asStringColumn().replaceAll("-", "0.0").setName("Volume"));
 		
 		HashSet<String> symbols = RunContext.getContext().getIndexesInUse();
 
@@ -59,7 +86,7 @@ public class ParseIndices extends BaseConverter {
 		}
 		
 		df = df.rows(rowIdx.stream().mapToInt(i->i).toArray());
-		df.addColumns(DoubleColumn.create("OPEN INTEREST", df.rowCount()).setMissingTo(0.0));
+		df.addColumns(StringColumn.create("OPEN INTEREST", df.rowCount()).setMissingTo("0.0"));
 
 		StringColumn x = df.column("Index Date")
 						   .asStringColumn()
@@ -86,7 +113,7 @@ public class ParseIndices extends BaseConverter {
 		CsvWriteOptions opts = CsvWriteOptions
 								.builder(res)
 								.separator(',')
-								.header(true)
+								.header(false)
 								.build();
 
 		df.write().usingOptions(opts);
