@@ -1,0 +1,300 @@
+{
+    "BASELINK": [
+        {
+            "base_URL": "https:\/\/www.nseindia.com",
+            "stock_TYPE": "NSE"
+        }
+    ],
+    "SETTINGS": [
+        {
+            "setting_ID": 1,
+            "setting_NAME": "NIFTY",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 2,
+            "setting_NAME": "NIFTY JUNIOR",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 4,
+            "setting_NAME": "CNX 500",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 5,
+            "setting_NAME": "CNX MIDCAP",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 6,
+            "setting_NAME": "CNX IT",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 7,
+            "setting_NAME": "BANK NIFTY",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 8,
+            "setting_NAME": "MIDCAP 50",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 9,
+            "setting_NAME": "ESG INDIA IDX",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 10,
+            "setting_NAME": "SHARIAH",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 11,
+            "setting_NAME": "500 SHARIAH",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 12,
+            "setting_NAME": "CNX INFRA",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 13,
+            "setting_NAME": "CNX REALTY",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 14,
+            "setting_NAME": "CNX ENERGY",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 15,
+            "setting_NAME": "CNX MNC",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 16,
+            "setting_NAME": "CNX PHARMA",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 17,
+            "setting_NAME": "CNX PSE",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 18,
+            "setting_NAME": "CNX PSU BANK",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 19,
+            "setting_NAME": "CNX SERVICE",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 20,
+            "setting_NAME": "CNX FMCG",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 21,
+            "setting_NAME": "CNX 100",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 22,
+            "setting_NAME": "Equity Bhavcopy",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "equity"
+        },
+        {
+            "setting_ID": 27,
+            "setting_NAME": "Equities Directory",
+            "setting_VALUE": ".\/Equity",
+            "setting_TYPE": "directory",
+            "category": "download",
+            "subcategory": "equity"
+        },
+        {
+            "setting_ID": 28,
+            "setting_NAME": "Futures Bhavcopy",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "futures"
+        },
+        {
+            "setting_ID": 29,
+            "setting_NAME": "Add (-I) as prefix",
+            "setting_VALUE": "false",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "futures"
+        },
+        {
+            "setting_ID": 31,
+            "setting_NAME": "Futures Directory",
+            "setting_VALUE": ".\/Futures",
+            "setting_TYPE": "directory",
+            "category": "download",
+            "subcategory": "futures"
+        },
+        {
+            "setting_ID": 36,
+            "setting_NAME": "Skip Weekends",
+            "setting_VALUE": "false",
+            "setting_TYPE": "checkbox",
+            "category": "others",
+            "subcategory": ""
+        },
+        {
+            "setting_ID": 38,
+            "setting_NAME": "Create consolidated Bhavcopy",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "others",
+            "subcategory": ""
+        },
+        {
+            "setting_ID": 39,
+            "setting_NAME": "Consolidated Bhavcopy Directory",
+            "setting_VALUE": ".\/Eod",
+            "setting_TYPE": "directory",
+            "category": "others",
+            "subcategory": ""
+        },
+        {
+            "setting_ID": 41,
+            "setting_NAME": "VIX",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 42,
+            "setting_NAME": "CNX AUTO",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 43,
+            "setting_NAME": "CNX FINANCE",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 44,
+            "setting_NAME": "CNX METAL",
+            "setting_VALUE": "true",
+            "setting_TYPE": "checkbox",
+            "category": "download",
+            "subcategory": "index"
+        },
+        {
+            "setting_ID": 45,
+            "setting_NAME": "Indices Directory",
+            "setting_VALUE": ".\/Index",
+            "setting_TYPE": "directory",
+            "category": "others",
+            "subcategory": ""
+        }
+    ],
+    "LINKS": [
+        {
+            "product_NAME": "Equities Bhavcopy",
+            "product_CODE": "eqbhav",
+            "product_DESCRIPTION": "Equities Bhavcopy link",
+            "product_LINK": "https:\/\/www.nseindia.com\/api\/reports?archives=%%5B%%7B%%22name%%22%%3A%%22CM%%20-%%20Bhavcopy(csv)%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22capital-market%%22%%2C%%22section%%22%%3A%%22equities%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=equities&mode=single"
+        },
+        {
+            "product_NAME": "FO Bhavcopy",
+            "product_CODE": "fobhav",
+            "product_DESCRIPTION": "FO Bhavcopy link",
+            "product_LINK": "https:\/\/www.nseindia.com\/api\/reports?archives=%%5B%%7B%%22name%%22%%3A%%22F%%26O%%20-%%20Bhavcopy(csv)%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22derivatives%%22%%2C%%22section%%22%%3A%%22equity%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=equity&mode=single"
+        },
+        {
+            "product_NAME": "Index Bhavcopy",
+            "product_CODE": "indexbhav",
+            "product_DESCRIPTION": "Index Bhavcopy link",
+            "product_LINK": "https:\/\/www.nseindia.com\/api\/reports?archives=%%5B%%7B%%22name%%22%%3A%%22Daily%%20Snapshot%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22capital-market%%22%%2C%%22section%%22%%3A%%22indices%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=indices&mode=single"
+        },
+        {
+            "product_NAME": "Version Check",
+            "product_CODE": "version",
+            "product_DESCRIPTION": "Version Check link",
+            "product_LINK": "https:\/\/docs.google.com\/document\/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
+        }
+    ]
+}
