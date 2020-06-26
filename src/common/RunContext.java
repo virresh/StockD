@@ -10,10 +10,9 @@ import models.Setting;
 
 public class RunContext {
 	
-	private boolean FO_add_I_prefix;
-	private boolean consolidateBhavCopy;
-	private boolean skip_weekends;
-	
+	boolean FO_add_I_prefix;
+	boolean consolidateBhavCopy;
+	boolean skip_weekends;
 	
 	private static RunContext sinstance;
 	private HashSet<String> indexesInUse;
@@ -30,7 +29,12 @@ public class RunContext {
 	
 	File temp;
 	
+	boolean doEquity;
+	boolean doFutures;
+	boolean doIndices;
+	
 	public void updateContext() {
+		indexesInUse = new HashSet<>();
 		for(Setting s: ConfigurationWrapper.getInstance().get_all_settings()) {
 			if(s.getSETTING_TYPE().equals("directory")) {
 				if(s.getSETTING_NAME().equals("Equities Directory")) {
@@ -56,17 +60,23 @@ public class RunContext {
 				else if(s.getSETTING_NAME().equals("Skip Weekends")) {
 					this.skip_weekends = (s.getSETTING_VALUE().equals("true"))?true:false;
 				}
+				else if(s.getSETTING_NAME().equals("Equity Bhavcopy")) {
+					this.doEquity = (s.getSETTING_VALUE().equals("true"))?true:false;
+				}
+				else if(s.getSETTING_NAME().equals("Futures Bhavcopy")) {
+					this.doFutures = (s.getSETTING_VALUE().equals("true"))?true:false;
+				}
 			}
 		}
 		
 		for(Link l: ConfigurationWrapper.getInstance().get_all_links()) {
-			if(l.getPRODUCT_NAME().equals("eqbhav")) {
+			if(l.getPRODUCT_CODE().equals("eqbhav")) {
 				this.eqBhavCopy = l;
 			}
-			else if(l.getPRODUCT_NAME().equals("fobhav")) {
+			else if(l.getPRODUCT_CODE().equals("fobhav")) {
 				this.fuBhavCopy = l;
 			}
-			else if(l.getPRODUCT_NAME().equals("indexbhav")) {
+			else if(l.getPRODUCT_CODE().equals("indexbhav")) {
 				this.indicesBhavCopy = l;
 			}
 		}
@@ -74,7 +84,14 @@ public class RunContext {
 		for(BaseLink bl: ConfigurationWrapper.getInstance().get_base_links()) {
 			this.base = bl;
 			break;
-		}		
+		}
+		
+		if(indexesInUse.size() > 0) {
+			doIndices = true;
+		}
+		else {
+			doIndices = false;
+		}
 	}
 	
 	private RunContext() {
@@ -138,15 +155,15 @@ public class RunContext {
 	}
 	
 	public String getEqLink() {
-		return this.base.getBASE_URL() + this.eqBhavCopy.getPRODUCT_LINK();
+		return this.eqBhavCopy.getPRODUCT_LINK();
 	}
 	
 	public String getFuLink() {
-		return this.base.getBASE_URL() + this.fuBhavCopy.getPRODUCT_LINK();
+		return this.fuBhavCopy.getPRODUCT_LINK();
 	}
 	
 	public String getIndicesLink() {
-		return this.base.getBASE_URL() + this.indicesBhavCopy.getPRODUCT_LINK();
+		return this.indicesBhavCopy.getPRODUCT_LINK();
 	}
 
 	public File getTemp() {
@@ -156,4 +173,16 @@ public class RunContext {
 	public void setTemp(File temp) {
 		this.temp = temp;
 	}
+
+	public boolean isDoEquity() {
+		return doEquity;
+	}
+
+	public boolean isDoFutures() {
+		return doFutures;
+	}
+
+	public boolean isDoIndices() {
+		return doIndices;
+	}	
 }

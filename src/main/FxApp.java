@@ -21,7 +21,7 @@ package main;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,12 +29,15 @@ import java.util.logging.SimpleFormatter;
 
 import org.sql2o.Sql2oException;
 
+import common.JSONUtils;
+import common.RunContext;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import models.ConfigurationWrapper;
+import models.Link;
 import parsers.ParseEQ;
 import parsers.ParseFO;
 import parsers.ParseIndices;
@@ -74,8 +77,17 @@ public class FxApp extends Application {
 //	    	System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
 //	    	System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 	    	
+	    	/// First time setup:
+//	    	JSONUtils.reset_configuration_from_file("/home/viresh/Desktop/StockD_stockdata/stockd_v4.00.json");
+
+
 	    	//// Setup Configuration
 	    	ConfigurationWrapper configs = ConfigurationWrapper.getInstance();
+//	    	RunContext.getContext().updateContext();
+	    	
+//	    	for(Link l: ConfigurationWrapper.getInstance().get_all_links()) {
+//	    		System.out.println(l.getPRODUCT_LINK());
+//	    	}
 	    	
 	    	if(args.length == 0) {
 	    		launch();    		
@@ -104,7 +116,7 @@ public class FxApp extends Application {
 			logger.log(Level.FINEST, ex.getMessage(), ex);
 //    		System.out.println("Fatal Error:");
 //    		System.out.println(ex.getMessage());
-//    		ex.printStackTrace();
+    		ex.printStackTrace();
     		System.exit(0);
     	}
     	finally {

@@ -72,6 +72,9 @@ public class ParseFO extends BaseConverter {
 							  this.prodcode + "_" + suffix + ".txt")
 					  .toString();
 		
+		df.column("VAL_INLAKH").setName("VOLUME");
+		df.column("OPEN_INT").setName("OPEN INTEREST");
+		
 		CsvWriteOptions opts = CsvWriteOptions
 								.builder(res)
 								.separator(',')

@@ -8,9 +8,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
 
 import common.Constants;
 import common.RunContext;
+import main.FxApp;
 import tech.tablesaw.api.DoubleColumn;
 import tech.tablesaw.api.StringColumn;
 import tech.tablesaw.api.Table;
@@ -26,18 +28,24 @@ public class ParseIndices extends BaseConverter {
 	public Table parse(String filePath) throws Exception {
 		File f = Paths.get(filePath).toFile();
 		InputStream instream = new FileInputStream(f);
+		if(f.isFile() && f.length()==0) {
+			FxApp.logger.log(Level.INFO, "Data Unavailable.");
+			instream.close();
+			f.delete();
+			return null;
+		}
 		Table df = Table
 				   .read()
 				   .csv(instream)
 				   .retainColumns("Index Name", "Index Date", "Open Index Value", "High Index Value", "Low Index Value", "Closing Index Value", "Volume");
 		
 		List<Integer> rowIdx = new ArrayList<Integer>();
-		
-		df.replaceColumn("Open Index Value", df.column("Open Index Value").asStringColumn().replaceAll("-", "0"));
-		df.replaceColumn("High Index Value", df.column("High Index Value").asStringColumn().replaceAll("-", "0"));
-		df.replaceColumn("Low Index Value", df.column("Low Index Value").asStringColumn().replaceAll("-", "0"));
-		df.replaceColumn("Closing Index Value", df.column("Closing Index Value").asStringColumn().replaceAll("-", "0"));
-		df.replaceColumn("Volume", df.column("Volume").asStringColumn().replaceAll("-", "0"));
+
+		df.replaceColumn(df.column("Open Index Value").asStringColumn().replaceAll("-", "0").setName("Open Index Value"));
+		df.replaceColumn(df.column("High Index Value").asStringColumn().replaceAll("-", "0").setName("High Index Value"));
+		df.replaceColumn(df.column("Low Index Value").asStringColumn().replaceAll("-", "0").setName("Low Index Value"));
+		df.replaceColumn(df.column("Closing Index Value").asStringColumn().replaceAll("-", "0").setName("Closing Index Value"));
+		df.replaceColumn(df.column("Volume").asStringColumn().replaceAll("-", "0").setName("Volume"));
 		
 		HashSet<String> symbols = RunContext.getContext().getIndexesInUse();
 
@@ -66,11 +74,19 @@ public class ParseIndices extends BaseConverter {
 						   System.getProperty("file.separator"), 
 						   this.prodcode + "_" + suffix + ".txt")
 					  .toString();
+
+		df.column("Index Name").setName("SYMBOL");
+		df.column("Index Date").setName("TIMESTAMP");
+		df.column("Open Index Value").setName("OPEN");
+		df.column("High Index Value").setName("HIGH");
+		df.column("Low Index Value").setName("LOW");
+		df.column("Closing Index Value").setName("CLOSE");
+		df.column("Volume").setName("VOLUME");
 		
 		CsvWriteOptions opts = CsvWriteOptions
 								.builder(res)
 								.separator(',')
-								.header(false)
+								.header(true)
 								.build();
 
 		df.write().usingOptions(opts);

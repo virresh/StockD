@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXScrollPane?>
 <?import com.jfoenix.controls.JFXTextArea?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -73,7 +74,7 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <JFXDatePicker accessibleText="From Date Picker" layoutX="308.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="0.0" />
+                        <JFXDatePicker fx:id="fromDate" accessibleText="From Date Picker" layoutX="308.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="99.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </children>
@@ -87,7 +88,7 @@
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <JFXDatePicker accessibleText="To Date Picker" layoutX="311.0" layoutY="1.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="1.0" />
+                        <JFXDatePicker fx:id="toDate" accessibleText="To Date Picker" layoutX="311.0" layoutY="1.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.rightAnchor="96.0" AnchorPane.topAnchor="1.0" />
                      </children>
                   </AnchorPane>
                </children>
@@ -107,7 +108,11 @@
             </VBox>
          </children>
       </AnchorPane>
-      <JFXTextArea fx:id="messages" layoutX="1.0" layoutY="199.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="46.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="199.0" />
+      <JFXScrollPane layoutY="198.0" prefHeight="157.0" prefWidth="600.0">
+         <children>
+            <JFXTextArea fx:id="messages" editable="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="355.0" prefWidth="600.0" style="-fx-background-color: white;" />
+         </children>
+      </JFXScrollPane>
    </children>
    <opaqueInsets>
       <Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />

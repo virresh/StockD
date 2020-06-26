@@ -154,8 +154,11 @@ public class FileDownloader {
 			t = parser.parse(outfile.getAbsolutePath());
 		} catch (Exception e) {
 			FxApp.logger.log(Level.SEVERE, "Cannot process file " + outfile.getAbsolutePath());
-			FxApp.logger.log(Level.SEVERE, e.getMessage());
+			FxApp.logger.log(Level.FINEST, e.getMessage(), e);
 			e.printStackTrace();
+		}
+		if(outfile.exists()) {
+			outfile.delete();
 		}
 		return t;
 	}

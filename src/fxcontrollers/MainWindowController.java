@@ -1,13 +1,18 @@
 package fxcontrollers;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 
+import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextArea;
 
 import common.RunContext;
+import downloads.Callback;
 import downloads.FileDownloader;
+import downloads.PerformDay;
+import downloads.PerformOnRange;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,7 +29,7 @@ import logging.TextFieldHandler;
 import main.FxApp;
 import parsers.ParseFO;
 
-public class MainWindowController implements Initializable {
+public class MainWindowController implements Initializable, Callback {
 
     @FXML
     private AnchorPane mainroot;
@@ -40,10 +45,19 @@ public class MainWindowController implements Initializable {
 
     @FXML
     private MenuItem preference_button;
+    
+    @FXML
+    private JFXDatePicker fromDate;
+
+    @FXML
+    private JFXDatePicker toDate;
+
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		FxApp.logger.addHandler(new TextFieldHandler(messages));
+//		FxApp.logger.addHandler(new TextFieldHandler(messages));
+		fromDate.setValue(LocalDate.now());
+		toDate.setValue(LocalDate.now());
 	}
 	
 	public void openSettings(ActionEvent event) {
@@ -72,22 +86,21 @@ public class MainWindowController implements Initializable {
 	}
 	
 	public void startdownload(ActionEvent event) {
+		preference_button.setDisable(true);
 		try {
-			RunContext rt = RunContext.getContext();
-//			ParseEQ p = new ParseEQ("./Equity/");
-//			ParseIndices p = new ParseIndices("./Indices");
-			ParseFO p = new ParseFO("./Futures");
-			FileDownloader fd = new FileDownloader(rt.getTemp().getAbsolutePath());
-//			String dlink = "https://archives.nseindia.com/content/historical/EQUITIES/2020/MAY/cm05MAY2020bhav.csv.zip";
-			String dlink = "https://archives.nseindia.com/content/historical/DERIVATIVES/2020/JUN/fo24JUN2020bhav.csv.zip";
-//			String dlink = "https://archives.nseindia.com/content/indices/ind_close_all_23062020.csv";
-//			String dlink = "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22F%26O%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22derivatives%22%2C%22section%22%3A%22equity%22%7D%5D&date=03-Jun-2020&type=equity&mode=single";
-			fd.DownloadFile(dlink, p);
+			RunContext.getContext().updateContext();
+			Thread t = new Thread(new PerformOnRange(fromDate.getValue(), toDate.getValue(), this));
+			t.start();
 		} catch (Exception e) {
 			FxApp.logger.log(Level.SEVERE, "Could not parse given link.");
 			FxApp.logger.log(Level.FINEST, e.getMessage(), e);
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void callback() {
+		preference_button.setDisable(false);
 		FxApp.logger.log(Level.INFO, "Download Completed");
 	}
 
