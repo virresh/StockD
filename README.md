@@ -3,6 +3,8 @@
 
 EOD Stock data downloader
 
+If you find this software useful, consider [contributing](https://github.com/virresh/StockD/wiki/Contributing) to the project.  
+
 ## Features
 - Download historical end-of-day data for equity and futures
 - Features three download profiles
