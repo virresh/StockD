@@ -1,0 +1,34 @@
+{
+    "BASELINK": [
+        {
+            "base_URL": "https:\/\/archives.nseindia.com",
+            "stock_TYPE": "NSE Archives"
+        }
+    ],
+    "LINKS": [
+        {
+            "product_NAME": "Equities Bhavcopy",
+            "product_CODE": "eqbhav",
+            "product_DESCRIPTION": "Equities Bhavcopy link",
+            "product_LINK": "https:\/\/archives.nseindia.com\/content\/historical\/EQUITIES\/%1$tY\/%1$Tb\/cm%1$td%1$Tb%1$tYbhav.csv.zip"
+        },
+        {
+            "product_NAME": "FO Bhavcopy",
+            "product_CODE": "fobhav",
+            "product_DESCRIPTION": "FO Bhavcopy link",
+            "product_LINK": "https:\/\/archives.nseindia.com\/content\/historical\/DERIVATIVES\/%1$tY\/%1$Tb\/fo%1$td%1$Tb%1$tYbhav.csv.zip"
+        },
+        {
+            "product_NAME": "Index Bhavcopy",
+            "product_CODE": "indexbhav",
+            "product_DESCRIPTION": "Index Bhavcopy link",
+            "product_LINK": "https:\/\/archives.nseindia.com\/content\/indices\/ind_close_all_%1$td%1$tm%1$tY.csv"
+        },
+        {
+            "product_NAME": "Version Check",
+            "product_CODE": "version",
+            "product_DESCRIPTION": "Version Check link",
+            "product_LINK": "https:\/\/docs.google.com\/document\/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
+        }
+    ]
+}
