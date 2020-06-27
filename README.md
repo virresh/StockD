@@ -7,10 +7,13 @@ EOD Stock data downloader
 - Download historical end-of-day data for equity and futures
 - Features three download profiles
 - Can use custom profiles for links and settings
+- Convert the EOD data into a common format which can be used by several professional softwares for charting
 
 ## F.A.Q
 - Who provides this data?  
 The data provided can be set using given profiles. All the current profiles fetch data from Official NSE website. You may be able to use other community-supplied profiles as well.
+- What is the Data Format?  
+All data is saved into comma seperated txt files with 8 columns, viz - Symbol, Date, Open, High, Low, Close, Open Interest
 - Selecting less indices still downloads data of all scripts?  
 Yes. Indices are seperate from equity data. It is not feasible to download selected scrips only, instead it's way faster to download all data. Selecting indices only works when downloading data of indices, not scrips.
 - Can't download data?  
@@ -23,7 +26,16 @@ However, if you're downloading lots of data, be mindful of NSE's server's bandwi
 - Where to get help?  
 I welcome everyone to join in the [gitter chatroom](https://gitter.im/virresh/StockD) and help each other out.
 
-Steps to run:  
+### Steps to run (For Users):
+- Download the latest release from https://github.com/virresh/StockD/releases/latest.
+- Unzip the files into a single folder
+- Run using the provided Launcher.bat (on Windows) or Launcher.sh (on Linux) or LauncherMac.sh (on MacOS)
+
+In case you find any bugs, please file an issue: https://github.com/virresh/StockD/issues  
+In case you need help/want to connect with other StockD users, join the chatroom at: https://gitter.im/virresh/StockD  
+For a detailed User Guide, have a look at: https://github.com/virresh/StockD/wiki/User-Guide
+
+### Steps to run (For Developers, from source code):  
 ```
 $ mvn clean javafx:run
 ```
