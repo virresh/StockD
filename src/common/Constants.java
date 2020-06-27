@@ -28,7 +28,7 @@ import java.util.logging.Level;
 import main.FxApp;
 
 public class Constants {
-	public static String version = "4.0.0";	
+	public static String version = "4.0";	
 	public static String appname = "StockD";
 	public static String dbname = "stockdb";
 	public static String base = "BASELINK";
@@ -55,6 +55,21 @@ public class Constants {
 			FxApp.logger.log(Level.SEVERE, "Couldn't parse date!");
 			FxApp.logger.log(Level.SEVERE, ex.getMessage());
 			ex.printStackTrace();
+		}
+		return ans;
+	}
+	
+	public static boolean isnewer(String netversion) {
+		boolean ans = false;
+		try {
+			double x = Double.parseDouble(Constants.version);
+			double y = Double.parseDouble(netversion);
+			if(x < y) {
+				ans = true;
+			}
+		}
+		catch(Exception ex) {
+			
 		}
 		return ans;
 	}

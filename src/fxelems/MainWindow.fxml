@@ -26,8 +26,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="About">
             <items>
-              <MenuItem mnemonicParsing="false" text="Details" />
-                  <MenuItem mnemonicParsing="false" text="Notice" />
+              <MenuItem mnemonicParsing="false" onAction="#openAbout" text="Information" />
             </items>
           </Menu>
         </menus>
@@ -41,7 +40,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="UpdateLabel" layoutX="211.0" prefHeight="25.0" prefWidth="50.0" text="Latest" textFill="#f51717" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="UpdateLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="211.0" prefHeight="25.0" prefWidth="50.0" text="-" textFill="#f51717" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="34.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="16.0" />
                      </font>
@@ -55,7 +54,7 @@
                         <Font size="16.0" />
                      </font>
                   </Label>
-                  <Label fx:id="InternetStatus" layoutX="236.0" prefHeight="25.0" text="OK" textFill="#29dd8c" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0">
+                  <Label fx:id="InternetStatus" alignment="CENTER" contentDisplay="CENTER" layoutX="236.0" prefHeight="25.0" text="-" textFill="#29dd8c" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font size="16.0" />
                      </font>

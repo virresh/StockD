@@ -19,16 +19,19 @@
  ******************************************************************************/
 package fxcontrollers;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.JFXTextArea;
 
+import common.Constants;
 import common.RunContext;
 import downloads.Callback;
 import downloads.PerformOnRange;
@@ -87,6 +90,54 @@ public class MainWindowController implements Initializable, Callback, DisplayMes
 		FxApp.logger.addHandler(new TextFieldHandler(this));
 		fromDate.setValue(LocalDate.now());
 		toDate.setValue(LocalDate.now());
+		internetCheck();
+	}
+	
+	public void internetCheck() {
+		String link = RunContext.getContext().getVersionCheckLink();
+		try {
+			URL u = new URL(link);
+			Scanner s = new Scanner(u.openStream());
+			if(s.hasNext()) {
+				String x = s.next();
+				if(Constants.isnewer(x)) {
+					FxApp.logger.log(Level.INFO, "A newer version is available. Consider updating to get newest features.");
+					UpdateLabel.setText("Available");
+				}
+				else {
+					UpdateLabel.setText("Latest");
+				}
+				InternetStatus.setText("OK");
+			}
+			else {
+				FxApp.logger.log(Level.INFO, "Could not check internet connectivity and version!");
+				throw new IOException();
+			}
+			s.close();
+		} catch (IOException e) {
+			InternetStatus.setText("ERROR");
+			FxApp.logger.log(Level.INFO, "Could not check internet connectivity and version!");
+			e.printStackTrace();
+		}
+	}
+	
+	@FXML
+	public void openAbout(ActionEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/About.fxml"));
+	        Parent otherroot = loader.load();
+	        Stage stage = new Stage();
+	        Stage primaryStage = (Stage) mainroot.getScene().getWindow();
+	        stage.setScene(new Scene(otherroot));
+	        
+	        stage.initModality(Modality.WINDOW_MODAL);
+	        stage.initOwner(primaryStage);
+	        stage.show();			
+		}
+        catch(Exception ex) {
+        	FxApp.logger.log(Level.FINEST, "Unable to open about!");
+        	ex.printStackTrace();
+        }
 	}
 	
 	public void openSettings(ActionEvent event) {

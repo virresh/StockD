@@ -22,12 +22,15 @@ package common;
 import java.io.File;
 import java.util.HashSet;
 
+import javafx.application.HostServices;
 import models.BaseLink;
 import models.ConfigurationWrapper;
 import models.Link;
 import models.Setting;
 
 public class RunContext {
+	
+	HostServices hs;
 	
 	boolean FO_add_I_prefix;
 	boolean consolidateBhavCopy;
@@ -214,5 +217,13 @@ public class RunContext {
 
 	public boolean isDoIndices() {
 		return doIndices;
+	}
+
+	public HostServices getHs() {
+		return hs;
+	}
+
+	public void setHs(HostServices hs) {
+		this.hs = hs;
 	}	
 }

@@ -20,10 +20,8 @@
 
 package main;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.SQLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -34,6 +32,7 @@ import org.sql2o.Sql2oException;
 
 import common.Constants;
 import common.JSONUtils;
+import common.RunContext;
 import fxcontrollers.MainWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -60,6 +59,8 @@ public class FxApp extends Application {
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("StockD - v" + Constants.version);
+        
+        RunContext.getContext().setHs(getHostServices());
         
         // reference: https://stackoverflow.com/a/52234104/9374197
         MainWindowController mwinc = loader.getController();
@@ -89,7 +90,7 @@ public class FxApp extends Application {
     	try {
 	    	//// Setup logging facilities
     		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-	    	fh = new FileHandler(System.getProperty("user.dir") + "/app.log", true);
+	    	fh = new FileHandler(System.getProperty("user.dir") + "/app.log", false);
 	    	SimpleFormatter formatter = new SimpleFormatter();
 	    	fh.setFormatter(formatter);
 //	    	System.setProperty("java.util.logging.SimpleFormatter.format",
