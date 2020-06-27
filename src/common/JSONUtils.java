@@ -21,6 +21,8 @@ package common;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,51 +35,109 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import main.FxApp;
 import models.BaseLink;
 import models.ConfigurationWrapper;
 import models.Link;
 import models.Setting;
 
 public class JSONUtils {
-	private static Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private static Logger logger = FxApp.logger;
 	private static JsonNode read_file(String location) {
 		JsonNode json = null;
 		ObjectMapper om = new ObjectMapper();
 		File f = new File(location);
 		if(f.canRead() == false) {
-			logger.log(Level.FINER, "Do not have read permissions on file.");
+			logger.log(Level.FINEST, "Do not have read permissions on file.");
 			return null;
 		}
 
 		try {
 			json = om.readTree(f);
 		} catch (JsonProcessingException e) {
-			logger.log(Level.FINER, "Jackson failed to parse JSON.");
-			logger.log(Level.FINER, e.getMessage());
+			logger.log(Level.FINEST, "Jackson failed to parse JSON.");
+			logger.log(Level.FINEST, e.getMessage(), e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			logger.log(Level.FINER, "IO Exception");
-			logger.log(Level.FINER, e.getMessage());
+			logger.log(Level.FINEST, "IO Exception");
+			logger.log(Level.FINEST, e.getMessage());
 			e.printStackTrace();
 		}
 		return json;
 	}
 	
-	public static void read_settings_from_URL(String url) {
-		// Read settings from URL and override in database
+	private static JsonNode read_inputstream(InputStream inp) {
+		JsonNode json = null;
+		ObjectMapper om = new ObjectMapper();
+		try {
+			json = om.readTree(inp);
+		} catch (IOException e) {
+			logger.log(Level.FINEST, "Unable to read input. Leaving configuration as-is.");
+			logger.log(Level.FINEST, e.getMessage(), e);
+			e.printStackTrace();
+		}
+		return json;
 	}
 	
-	public static void read_settings_from_file(String location) {
-		// Read settings from URL and override in database
+	private static JsonNode read_url(String url) {
+		JsonNode json = null;
+		ObjectMapper om = new ObjectMapper();
+		
+		try {
+			json = om.readTree(new URL(url));
+		} catch (IOException e) {
+			logger.log(Level.INFO, "Loading link profile from URL failed.");
+			logger.log(Level.FINEST, "Unable to read url. Leaving configuration as-is.");
+			logger.log(Level.FINEST, e.getMessage(), e);
+			e.printStackTrace();
+		}
+		return json;
 	}
 	
-	public static void reset_configuration_from_URL(String url) {
-		// Read all configurations from URL and override in database
+	public static void reset_links_from_URL(String url) throws JsonMappingException, JsonProcessingException, SQLException {
+		// Read link profile from URL and override in database
+		JsonNode jnode = read_url(url);
+		if(jnode == null) {
+			return;
+		}
+		JsonNode baselink = jnode.get(Constants.base);
+		JsonNode links = jnode.get(Constants.links);
+		
+		ObjectMapper om = new ObjectMapper();
+		List<Link> links_list = null;
+		List<BaseLink> baselinks_list = null;
+		
+		if(baselink != null) {			
+			baselinks_list = om.readValue(baselink.toString(), new TypeReference<List<BaseLink>>(){});
+		}
+		if(links != null) {			
+			links_list = om.readValue(links.toString(), new TypeReference<List<Link>>(){});
+		}
+		
+		if(baselinks_list.size() >= 0 && links_list.size() > 0) {
+			ConfigurationWrapper global_instance = ConfigurationWrapper.getInstance(true);
+			global_instance.update_all_links(links_list);
+			global_instance.update_all_baselinks(baselinks_list);
+			
+			global_instance.override_and_save_to_db();					
+		}
+		else {
+			logger.log(Level.INFO, "Invalid Link Profile format. Not updating anything.");
+		}
 	}
 	
 	public static void reset_configuration_from_file(String location) throws JsonParseException, JsonMappingException, IOException, SQLException {
+		JsonNode jnd = read_file(location);
+		reset_configuration(jnd);
+	}
+	
+	public static void reset_configuration_from_inputstream(InputStream ins) throws JsonParseException, JsonMappingException, IOException, SQLException {
+		JsonNode jnd = read_inputstream(ins);
+		reset_configuration(jnd);
+	}
+
+	public static void reset_configuration(JsonNode jnode) throws JsonParseException, JsonMappingException, IOException, SQLException {
 		// Read all configurations from file and override in database
-		JsonNode jnode = read_file(location);
 		JsonNode baselink = jnode.get(Constants.base);
 		JsonNode settings = jnode.get(Constants.settings);
 		JsonNode links = jnode.get(Constants.links);
@@ -96,8 +156,8 @@ public class JSONUtils {
 		if(links != null) {			
 			links_list = om.readValue(links.toString(), new TypeReference<List<Link>>(){});
 		}
-		System.out.println(baselinks_list);
-		ConfigurationWrapper global_instance = ConfigurationWrapper.getInstance();
+		
+		ConfigurationWrapper global_instance = ConfigurationWrapper.getInstance(true);
 		global_instance.update_all_settings(setting_list);
 		global_instance.update_all_links(links_list);
 		global_instance.update_all_baselinks(baselinks_list);

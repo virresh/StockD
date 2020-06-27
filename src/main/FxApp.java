@@ -20,7 +20,11 @@
 
 package main;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.SQLException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +32,8 @@ import java.util.logging.SimpleFormatter;
 
 import org.sql2o.Sql2oException;
 
+import common.Constants;
+import common.JSONUtils;
 import fxcontrollers.MainWindowController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -53,12 +59,29 @@ public class FxApp extends Application {
 		}
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("StockD - Stock Data Downloader");
+        primaryStage.setTitle("StockD - v" + Constants.version);
         
         // reference: https://stackoverflow.com/a/52234104/9374197
         MainWindowController mwinc = loader.getController();
         primaryStage.getScene().getWindow().addEventFilter(WindowEvent.WINDOW_CLOSE_REQUEST, mwinc::shutdown);
         primaryStage.show();
+	}
+	
+	public static void firstTimeLoad() {
+    	/// First time setup:
+    	try {
+//    		Alert alert = new Alert(AlertType.INFORMATION);
+//    		alert.setTitle("First time setup");
+//    		alert.setHeaderText("Welcome to StockD!");
+//    		alert.setContentText("The application will configure itself after this dialog box. Please be patient as this could take a while.");
+//    		alert.showAndWait();
+    		InputStream in = FxApp.class.getResourceAsStream("/default.json"); 
+    		JSONUtils.reset_configuration_from_inputstream(in);
+		} catch (IOException | SQLException e) {
+			FxApp.logger.log(Level.SEVERE, "Failed to load default configuration! StockD failed to initialize.");
+			FxApp.logger.log(Level.SEVERE, e.getMessage(), e);
+			e.printStackTrace();
+		}		
 	}
 	
     public static void main(String[] args) {
@@ -77,10 +100,6 @@ public class FxApp extends Application {
 //	    	System.setProperty("org.apache.commons.logging.simplelog.showdatetime", "true");
 //	    	System.setProperty("org.apache.commons.logging.simplelog.log.org.apache.http.wire", "DEBUG");
 	    	
-	    	/// First time setup:
-//	    	JSONUtils.reset_configuration_from_file("/home/viresh/Desktop/StockD_stockdata/stockd_v4.00.json");
-
-
 	    	//// Setup Configuration
 	    	ConfigurationWrapper configs = ConfigurationWrapper.getInstance();
 //	    	RunContext.getContext().updateContext();

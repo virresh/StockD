@@ -28,7 +28,9 @@ import java.util.logging.Logger;
 import org.sql2o.Sql2oException;
 
 import common.Queries;
+import common.RunContext;
 import db.DBConnection;
+import main.FxApp;
 
 public class ConfigurationWrapper {
 	private List<Setting> all_settings;
@@ -69,14 +71,17 @@ public class ConfigurationWrapper {
 
 	public void update_all_settings(List<Setting> s) {
 		all_settings = s;
+		RunContext.getContext().updateContext();
 	}
 
 	public void update_all_links(List<Link> s) {
 		all_links = s;
+		RunContext.getContext().updateContext();
 	}
 
 	public void update_all_baselinks(List<BaseLink> s) {
 		base_links = s;
+		RunContext.getContext().updateContext();
 	}
 	
 	
@@ -118,6 +123,7 @@ public class ConfigurationWrapper {
 			}
 		}
 		logger.log(Level.INFO, "All settings updated\n");
+		RunContext.getContext().updateContext();
 	}
 	
 	public void load_from_from_db() {
@@ -144,17 +150,24 @@ public class ConfigurationWrapper {
 			e.printStackTrace();
 			logger.log(Level.SEVERE, e.getMessage());
 		}
+		RunContext.getContext().updateContext();
 	}
 	
-	public static ConfigurationWrapper getInstance() {
+	public static ConfigurationWrapper getInstance(boolean skipcheck) {
 		if(instance != null) {
 			return instance;
 		}
 		else {
 			instance = new ConfigurationWrapper();
 			instance.load_from_from_db();
+			if(instance.base_links.size() == 0 && !skipcheck) {
+				FxApp.firstTimeLoad();
+			}
 			return instance;
 		}
 	}
 	
+	public static ConfigurationWrapper getInstance() {
+		return getInstance(false);
+	}
 }

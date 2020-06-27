@@ -31,8 +31,10 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTabPane;
 
+import common.JSONUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -47,11 +49,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import main.FxApp;
 import models.BaseLink;
 import models.ConfigurationWrapper;
+import models.Link;
 import models.Setting;
 
 public class SettingWindowController implements Initializable {
@@ -78,6 +83,19 @@ public class SettingWindowController implements Initializable {
     
     @FXML
     private FlowPane others;
+    
+    @FXML
+    private JFXComboBox<String> profileurl;
+
+    @FXML
+    private Button loadlinkprofile;
+
+    @FXML
+    private Button resetall;
+
+    @FXML
+    private VBox currentprofile;
+
     
     private Node make_chkbox(Setting s) {
 		JFXCheckBox chkbox = new JFXCheckBox(s.getSETTING_NAME());
@@ -128,6 +146,7 @@ public class SettingWindowController implements Initializable {
 		return labelCombo;
     }
     
+    @FXML
     public void check_all(ActionEvent event) {
     	if(event.getSource() instanceof Button) {
     		Button b = (Button) event.getSource();
@@ -151,6 +170,7 @@ public class SettingWindowController implements Initializable {
     	}
     }
     
+    @FXML
     public void uncheck_all(ActionEvent event) {
     	if(event.getSource() instanceof Button) {
     		Button b = (Button) event.getSource();
@@ -208,12 +228,66 @@ public class SettingWindowController implements Initializable {
         }
     }
     
+    public void updateConfigurationUI() {
+		profileurl.getItems().clear();
+		profileurl.getItems().addAll(
+				  "https://virresh.github.io/StockD/nse_live.json",
+				  "https://virresh.github.io/StockD/nse_archives.json",
+				  "https://virresh.github.io/StockD/nse_old.json");
+		List<BaseLink> baselinks = ConfigurationWrapper.getInstance().get_base_links();
+		List<Link> links = ConfigurationWrapper.getInstance().get_all_links();
+		if(baselinks.size() == 0) {
+			FxApp.logger.log(Level.INFO, "Corrupted Internal database. Re-Initialise by deleting stockdb folder.");
+		}
+		BaseLink b = baselinks.get(0);
+		currentprofile.getChildren().clear();
+		currentprofile.getChildren().add(new Label("Current Profile: " + b.getSTOCK_TYPE()));
+		for(Link l: links) {
+			currentprofile.getChildren().add(new Label(l.getPRODUCT_DESCRIPTION() + ": " + l.getPRODUCT_LINK()));
+		}
+    }
+    
+    @FXML
+    public void loadFromUrl() {
+    	String url = profileurl.getValue();
+    	try {
+	    	if(url != "") {
+	    		JSONUtils.reset_links_from_URL(url);
+	    		updateConfigurationUI();
+	    		Stage s = (Stage)(loadlinkprofile.getScene().getWindow());
+	    		s.close();
+	    	}
+    	}
+    	catch(Exception ex) {
+    		FxApp.logger.log(Level.FINEST, ex.getMessage(), ex);
+    	}
+    }
+    
+    @FXML
+    public void loadDefaults(ActionEvent event) {
+    	try {
+    		FxApp.firstTimeLoad();
+    		updateConfigurationUI();
+    		Stage s = (Stage)(loadlinkprofile.getScene().getWindow());
+    		s.close();
+	    }
+    	catch(Exception ex) {
+    		FxApp.logger.log(Level.FINEST, ex.getMessage(), ex);
+    	}
+    }
+    
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
 		int N_rows = 9;
-		List<BaseLink> baselinks = ConfigurationWrapper.getInstance().get_base_links();
 		List<Setting> settings = ConfigurationWrapper.getInstance().get_all_settings();
-		BaseLink b = baselinks.get(0);
+		try {
+			updateConfigurationUI();	
+		}
+		catch(Exception ex){
+			// do nothing
+			FxApp.logger.log(Level.FINEST, ex.getMessage(), ex);
+		}
 		
 		Map<String, List<Integer>> categories = new HashMap<String, List<Integer>>();
 		

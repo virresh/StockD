@@ -19,10 +19,12 @@
  ******************************************************************************/
 package downloads;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.logging.Level;
 
+import common.RunContext;
 import main.FxApp;
 
 public class PerformOnRange implements Runnable{
@@ -49,11 +51,18 @@ public class PerformOnRange implements Runnable{
 	public void run() {
 		double total = ChronoUnit.DAYS.between(this.start, this.end);
 		double current = 0.0;
+		boolean skipweekends = RunContext.getContext().isSkipWeekends();
+
 		this.p.updateProgress(current, total);
 		try {
 			for(LocalDate ld = this.start; this.end.isAfter(ld) && !this.stop; ld=ld.plusDays(1) ) {
-				PerformDay p = new PerformDay(ld);
-				p.perform();
+				if(skipweekends && (ld.getDayOfWeek().equals(DayOfWeek.SATURDAY) || ld.getDayOfWeek().equals(DayOfWeek.SUNDAY))){
+					FxApp.logger.log(Level.INFO, "Skipping weekend " + ld.toString());
+				}
+				else {
+					PerformDay p = new PerformDay(ld);
+					p.perform();					
+				}
 				current += 1;
 				this.p.updateProgress(current, total);
 			}

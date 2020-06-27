@@ -43,6 +43,7 @@ public class RunContext {
 	Link eqBhavCopy;
 	Link fuBhavCopy;
 	Link indicesBhavCopy;
+	Link versionCheck;
 	
 	BaseLink base;
 	
@@ -100,6 +101,9 @@ public class RunContext {
 			}
 			else if(l.getPRODUCT_CODE().equals("indexbhav")) {
 				this.indicesBhavCopy = l;
+			}
+			else if(l.getPRODUCT_CODE().equals("version")) {
+				this.versionCheck = l;
 			}
 		}
 		
@@ -186,6 +190,10 @@ public class RunContext {
 	
 	public String getIndicesLink() {
 		return this.indicesBhavCopy.getPRODUCT_LINK();
+	}
+	
+	public String getVersionCheckLink() {
+		return this.versionCheck.getPRODUCT_LINK();
 	}
 
 	public File getTemp() {
