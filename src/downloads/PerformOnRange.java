@@ -55,7 +55,7 @@ public class PerformOnRange implements Runnable{
 
 		this.p.updateProgress(current, total);
 		try {
-			for(LocalDate ld = this.start; this.end.isAfter(ld) && !this.stop; ld=ld.plusDays(1) ) {
+			for(LocalDate ld = this.start; this.end.plusDays(1).isAfter(ld) && !this.stop; ld=ld.plusDays(1) ) {
 				if(skipweekends && (ld.getDayOfWeek().equals(DayOfWeek.SATURDAY) || ld.getDayOfWeek().equals(DayOfWeek.SUNDAY))){
 					FxApp.logger.log(Level.INFO, "Skipping weekend " + ld.toString());
 				}
