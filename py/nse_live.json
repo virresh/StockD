@@ -1,34 +1,20 @@
 {
-    "BASELINK": [
-        {
-            "base_URL": "https://archives.nseindia.com",
-            "stock_TYPE": "NSE Daily"
+    "BASELINK": {
+        "base_URL": "https://archives.nseindia.com",
+        "stock_TYPE": "NSE Daily"
+    },
+    "LINKS": {
+        "eqBhav": {
+            "link": "https://archives.nseindia.com/content/historical/EQUITIES/%Y/%^b/cm%d%^b%Ybhav.csv.zip"
+        },
+        "fuBhav": {
+            "link": "https://archives.nseindia.com/content/historical/DERIVATIVES/%Y/%^b/fo%d%^b%Ybhav.csv.zip"
+        },
+        "indall": {
+            "link": "https://archives.nseindia.com/content/indices/ind_close_all_%d%m%Y.csv"
+        },
+        "version": {
+            "link": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
         }
-    ],
-    "LINKS": [
-        {
-            "product_NAME": "Equities Bhavcopy",
-            "product_CODE": "eqbhav",
-            "product_DESCRIPTION": "Equities Bhavcopy link",
-            "product_LINK": "https://archives.nseindia.com/content/historical/EQUITIES/%Y/%^b/cm%d%^b%Ybhav.csv.zip"
-        },
-        {
-            "product_NAME": "FO Bhavcopy",
-            "product_CODE": "fobhav",
-            "product_DESCRIPTION": "FO Bhavcopy link",
-            "product_LINK": "https://archives.nseindia.com/content/historical/DERIVATIVES/%Y/%^b/fo%d%^b%Ybhav.csv.zip"
-        },
-        {
-            "product_NAME": "Index Bhavcopy",
-            "product_CODE": "indexbhav",
-            "product_DESCRIPTION": "Index Bhavcopy link",
-            "product_LINK": "https://archives.nseindia.com/content/indices/ind_close_all_%d%m%Y.csv"
-        },
-        {
-            "product_NAME": "Version Check",
-            "product_CODE": "version",
-            "product_DESCRIPTION": "Version Check link",
-            "product_LINK": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
-        }
-    ]
+    }
 }
