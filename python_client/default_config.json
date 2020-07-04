@@ -1,0 +1,62 @@
+{
+    "BASELINK": {
+        "base_URL": "https://www.nseindia.com",
+        "stock_TYPE": "NSE Archives"
+    },
+    "SETTINGS": {
+        "eqCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "eqDir": {
+            "type": "directory",
+            "value": "./Equity"
+        },
+        "fuCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "fuDir": {
+            "type": "directory",
+            "value": "./Futures"
+        },
+        "fuPrefix": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "inCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "inDir": {
+            "type": "directory",
+            "value": "./Indices"
+        },
+        "allCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "allDir": {
+            "type": "directory",
+            "value": "./EOD"
+        },
+        "advSkipWeekend": {
+            "type": "checkbox",
+            "value": "false"
+        }
+    },
+    "LINKS": {
+        "eqBhav": {
+            "link": "https://www.nseindia.com/api/reports?archives=%%5B%%7B%%22name%%22%%3A%%22CM%%20-%%20Bhavcopy(csv)%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22capital-market%%22%%2C%%22section%%22%%3A%%22equities%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=equities&mode=single"
+        },
+        "fuBhav": {
+            "link": "https://www.nseindia.com/api/reports?archives=%%5B%%7B%%22name%%22%%3A%%22F%%26O%%20-%%20Bhavcopy(csv)%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22derivatives%%22%%2C%%22section%%22%%3A%%22equity%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=equity&mode=single"
+        },
+        "indall": {
+            "link": "https://www.nseindia.com/api/reports?archives=%%5B%%7B%%22name%%22%%3A%%22Daily%%20Snapshot%%22%%2C%%22type%%22%%3A%%22archives%%22%%2C%%22category%%22%%3A%%22capital-market%%22%%2C%%22section%%22%%3A%%22indices%%22%%7D%%5D&date=%1$td-%1$tb-%1$tY&type=indices&mode=single"
+        },
+        "version": {
+            "link": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
+        }
+    } 
+}

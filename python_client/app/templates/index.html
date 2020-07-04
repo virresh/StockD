@@ -4,13 +4,269 @@
             StockD
         </title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css' )}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css' )}}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-editable-select.min.css' )}}">
     </head>
     <body>
-        <div class=".container-fluid">
-            <h1>Hello!</h1>
+        <div class="text-center">
+            <a target="_blank" href="https://github.com/virresh/StockD/">
+                <img src="{{url_for('static', filename='img/icon.png')}}" class="img-fluid img-thumbnail">
+            </a>
+        </div>
+        <div class="container-fluid text-center">
+            <h3>Usage: Enter dates and hit download</h3>
+        </div>
+        <div class="container text-center">
+            <form>
+                <div class="form-group row">
+                    <label for="fromDate" class="col-sm-4 col-form-label">From Date:</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control set-today" id="fromDate">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="toDate" class="col-sm-4 col-form-label">To Date:</label>
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control set-today" id="toDate">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Download</button>
+            </form>
+        </div>
+        <div class="container-fluid text-center">
+            <h3>Select your preferences below:</h3>
+        </div>
+        <nav class="nav-justified">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-eq-tab" data-toggle="tab" href="#nav-eq" role="tab">Equity</a>
+                <a class="nav-item nav-link" id="nav-in-tab" data-toggle="tab" href="#nav-in" role="tab">Indices</a>
+                <a class="nav-item nav-link" id="nav-fu-tab" data-toggle="tab" href="#nav-fu" role="tab">Futures</a>
+                <a class="nav-item nav-link" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab">All</a>
+                <a class="nav-item nav-link" id="nav-adv-tab" data-toggle="tab" href="#nav-adv" role="tab">Advanced</a>
+            </div>
+        </nav>
+        <form id="preferencesForm">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active container" id="nav-eq" role="tabpanel" aria-labelledby="nav-eq-tab">
+                    <div class="form-group row">
+                        <label for="eqCheck" class="col-sm-4 col-form-label">Download Equity?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="eqCheck"> -->
+                            <input type="hidden" value="false" name="eqCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="eqCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="eqDir" class="col-sm-4 col-form-label">Equity Directory:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="eqDir" name="eqDir">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade container" id="nav-in" role="tabpanel" aria-labelledby="nav-in-tab">
+                    <div class="form-group row">
+                        <label for="inCheck" class="col-sm-4 col-form-label">Download Indices?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="inCheck"> -->
+                            <input type="hidden" value="false" name="inCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="inCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inDir" class="col-sm-4 col-form-label">Indices Directory:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="inDir" name="inDir">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade container" id="nav-fu" role="tabpanel" aria-labelledby="nav-fu-tab">
+                    <div class="form-group row">
+                        <label for="fuCheck" class="col-sm-4 col-form-label">Download Futures?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="fuCheck"> -->
+                            <input type="hidden" value="false" name="fuCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="fuCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="fuPrefix" class="col-sm-4 col-form-label">Add -I as prefix?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="fuPrefix"> -->
+                            <input type="hidden" value="false" name="fuPrefix" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="fuPrefix">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="fuDir" class="col-sm-4 col-form-label">Futures Directory:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="fuDir" name="fuDir">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade container" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+                    <div class="form-group row">
+                        <label for="allCheck" class="col-sm-4 col-form-label">Consolidate Bhavcopy?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="allCheck"> -->
+                            <input type="hidden" value="false" name="allCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="allCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="allDir" class="col-sm-4 col-form-label">Consolidation Directory:</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="allDir" name="allDir">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade container" id="nav-adv" role="tabpanel" aria-labelledby="nav-adv-tab">
+                    <div class="form-group row">
+                        <label for="advSkipWeekend" class="col-sm-4 col-form-label">Skip Weekends?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="advSkipWeekend"> -->
+                            <input type="hidden" value="false" name="advSkipWeekend" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="advSkipWeekend">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="allDir" class="col-sm-4 col-form-label">Load Link Profile from:</label>
+                        <div class="col-sm-4">
+                            <select type="text" class="form-control" id="linkProfile">
+                                <option value="https://virresh.github.io/StockD/py/nse_archives.json">https://virresh.github.io/StockD/py/nse_archives.json</option>
+                                <option value="https://virresh.github.io/StockD/py/nse_live.json">https://virresh.github.io/StockD/py/nse_live.json</option>
+                                <option value="https://virresh.github.io/StockD/py/nse_old.json">https://virresh.github.io/StockD/py/nse_old.json</option>
+                            </select>
+                        </div>
+                        <button class="col-sm-4 form-control btn btn-dark" onclick="loadLinkProfile('#linkProfile')" id="linkProfileLoad">Load</button>
+                    </div>
+                    <div class="container">
+                        <div class="row"><h4>Current Link Profile:</h4></div>
+                        <div class="row">
+                            <div class="col-sm-4">Profile Name: </div> <div class="col-sm-8" id="stock_TYPE"></div> 
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Equity Link: </div> <div class="col-sm-8" id="eqBhav"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Futures Link: </div> <div class="col-sm-8" id="fuBhav"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">Indices Link: </div> <div class="col-sm-8" id="indall"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button onclick="submitForm('#preferencesForm')" class="btn btn-secondary">Update Preferences</button>
+            </div>
+        </form>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">StockD v<span id="versionTxt">4.0</span></h1>
+                <p class="lead">Detailed user guide can be found at <a target="_blank" href="https://github.com/virresh/StockD/wiki/User-Guide">https://github.com/virresh/StockD/wiki/User-Guide</a>.</p>
+                <p class="lead">If you find this software helpful, consider <a target="_blank" href="https://github.com/virresh/StockD/wiki/Contributing">contributing/donating</a>.</p>
+                <p style="text-align: right;"> -- <a target="_blank" href="https://virresh.github.io/">Viresh Gupta (@virresh)</a></p>
+            </div>
+        </div>
+        <div id="loader">
+            <div class="d-flex justify-content-center vertical-center" id="loaderAnim">
+                <div class="text-center">
+                    <a target="_blank" href="https://github.com/virresh/StockD/">
+                        <img src="{{url_for('static', filename='img/icon.png')}}" class="img-fluid img-thumbnail">
+                    </a>
+                </div>
+                <div class="spinner-border" style="width: 10rem; height: 10rem;" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
         </div>
         <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js' )}}"></script>
         <script src="{{ url_for('static', filename='js/popper.min.js' )}}"></script>
         <script src="{{ url_for('static', filename='js/bootstrap.min.js' )}}"></script>
+        <script src="{{ url_for('static', filename='js/sweetalert.js' )}}"></script>
+        <script src="{{ url_for('static', filename='js/jquery-editable-select.min.js' )}}"></script>
+        <script type="text/javascript">
+            window.onload = function () {
+                document.querySelectorAll('.set-today').forEach(function(item){
+                    item.value = (new Date()).toISOString().substr(0, 10);
+                });
+                window.downEventSources = new EventSource('/stream');
+                window.downEventSources.onmessage = streamListener;
+                setDisable(false);
+                setVersion();
+                setConfiguration();
+                $('#linkProfile').editableSelect();
+                $('#loader').hide();
+            };
+            function jankyCheckbox(item) {
+                if(item.previousSibling.value == 'true'){
+                    item.previousSibling.value = 'false';
+                }
+                else{
+                    item.previousSibling.value = 'true';
+                }
+            };
+            function streamListener(event){
+                console.log(event);
+            };
+            function setDisable(val) {
+                $("#preferencesForm *").prop("disabled", val);
+            };
+            function loadLinkProfile(urlId) {
+                event.preventDefault();
+                var urlL = $(urlId).val();
+                console.log(urlL);
+                $.getJSON(urlL).done(function (idata) {
+                    $.ajax({
+                        url: '/setConfig',
+                        type: 'POST',
+                        data: JSON.stringify(idata),
+                        contentType: 'application/json'
+                    }).done(function (x) {
+                        setConfiguration();
+                        swal("Link Update", "Update Success!", 'success');
+                    }).fail(function (err) {
+                        // swal(err);
+                        console.log(err);
+                        swal("Link Update", 'Update Failed!', 'error');
+                    });
+                }).fail(function() {
+                    swal("Oh No!", "Couldn't connect to website! Check link and Internet connection.", "error");
+                });
+            };
+            function submitForm(fid) {
+                event.preventDefault();
+                $.ajax({
+                    url: '/setConfig',
+                    type: 'POST',
+                    data: $(fid).serialize()
+                }).done(function(data) {
+                    swal("Preference Update", data, 'success');
+                }).fail(function() {
+                    swal("Preference Update", 'Update Failed!', 'error');
+                });
+            };
+            function setConfiguration(){
+                $.get('/getConfig').done(function (data) {
+                    $('#stock_TYPE').text(data['BASELINK']['stock_TYPE']);
+                    for(d in data['SETTINGS']){
+                        if(data['SETTINGS'][d]['type'] == 'checkbox'){  
+                            if(data['SETTINGS'][d]['value'] == "" + $('#' + d).prop('checked')){
+                                // do nothing
+                            }
+                            else{
+                                $('#'+d).click();
+                            }
+                        }
+                        $('#'+d).val(data['SETTINGS'][d]['value']);
+                    }
+                    for(d in data['LINKS']){
+                        $('#'+d).text(data['LINKS'][d]['link']);
+                    }
+                    console.log(data);
+                }).fail(function() {
+                    swal("Error!", "Could not load configuration. Please report this to the developer.", 'error');
+                });
+            };
+            function setVersion() {
+                $.get('/version').done(function(data){
+                    $('#versionTxt').text(data);
+                });
+            };
+        </script>
     </body>
 </html>
