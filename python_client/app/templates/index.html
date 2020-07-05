@@ -17,21 +17,28 @@
             <h3>Usage: Enter dates and hit download</h3>
         </div>
         <div class="container text-center">
-            <form>
+            <form id="downloadForm">
                 <div class="form-group row">
                     <label for="fromDate" class="col-sm-4 col-form-label">From Date:</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control set-today" id="fromDate">
+                        <input type="date" class="form-control set-today" id="fromDate" name="fromDate">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="toDate" class="col-sm-4 col-form-label">To Date:</label>
                     <div class="col-sm-8">
-                        <input type="date" class="form-control set-today" id="toDate">
+                        <input type="date" class="form-control set-today" id="toDate" name="toDate">
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary">Download</button>
+                <button type="submit" onclick="performDownload()" class="btn btn-primary">Download</button>
             </form>
+        </div>
+        <marquee id="news" behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
+        </marquee>
+        <div class="progress">
+            <div id="dprogressbar" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <div id="logContainer" class="container" style="overflow: auto; height: 150px; margin-top: 1rem; background-color: aquamarine;">
         </div>
         <div class="container-fluid text-center">
             <h3>Select your preferences below:</h3>
@@ -186,11 +193,35 @@
                 });
                 window.downEventSources = new EventSource('/stream');
                 window.downEventSources.onmessage = streamListener;
+                window.downEventSources.addEventListener('log', logListener);
+                window.downEventSources.addEventListener('progress', progressListener);
                 setDisable(false);
                 setVersion();
+                setnews();
                 setConfiguration();
                 $('#linkProfile').editableSelect();
                 $('#loader').hide();
+            };
+            function performDownload() {
+                event.preventDefault();
+                $.ajax({
+                    url: '/download',
+                    type: 'POST',
+                    data: $('#downloadForm').serialize()
+                }).done(function (data) {
+                    setDisable(false);
+                    swal("StockD", data, 'success');
+                }).fail(function (e) {
+                    setDisable(false);
+                    console.log(e);
+                    swal("StockD", 'Download Failed!', 'error');
+                });
+                setDisable(true);
+            };
+            function setnews() {
+                $.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D").done(function(data) {
+                    $('#news').text(data);
+                });
             };
             function jankyCheckbox(item) {
                 if(item.previousSibling.value == 'true'){
@@ -200,8 +231,27 @@
                     item.previousSibling.value = 'true';
                 }
             };
+            function logListener(event) {
+                var theDiv = document.getElementById("logContainer");
+                var content = document.createTextNode(event.data);
+                var nline = document.createElement('br');
+                theDiv.appendChild(content);
+                theDiv.appendChild(nline);
+            };
+            function progressListener(event){
+                if(event.data == "-1"){
+                    swal("StockD", "Couldn't download data!", "error");
+                }
+                else{
+                    $('#dprogressbar').text(event.data+'%');
+                    $('#dprogressbar').css('width', event.data+'%').attr('aria-valuenow', event.data);
+                }
+            };
             function streamListener(event){
                 console.log(event);
+                if(event.data != ""){
+                    swal("StockD", event.data, "warning");
+                }
             };
             function setDisable(val) {
                 $("#preferencesForm *").prop("disabled", val);
