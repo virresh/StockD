@@ -1,6 +1,7 @@
 import logging
 import webview
 import multiprocessing
+import threading
 import sys
 import random
 import socket
@@ -31,11 +32,15 @@ if __name__ == '__main__':
     with redirect_stdout(stream):
         p = _get_random_port()
         srv = make_server('localhost', p, server, threaded=True)
-        x = multiprocessing.Process(target=srv.serve_forever)
+        # x = multiprocessing.Process(target=srv.serve_forever)
+        x = threading.Thread(target=srv.serve_forever)
+        x.daemon = True
         logger.warning("Running thread on {}".format(p))
+        # logger.warning("Static Path {}".format(server.static_folder))
         x.start()
         window = webview.create_window(
             'StockD', 'http://localhost:{}'.format(p))
-        webview.start(debug=True)
-        x.terminate()
+        server.winreference = window
+        webview.start(debug=False)
+        # x.terminate()
         sys.exit(0)

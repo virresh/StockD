@@ -3,6 +3,7 @@
         <title>
             StockD
         </title>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css' )}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css' )}}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-editable-select.min.css' )}}">
@@ -64,8 +65,11 @@
                     </div>
                     <div class="form-group row">
                         <label for="eqDir" class="col-sm-4 col-form-label">Equity Directory:</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="eqDir" name="eqDir">
+                        </div>
+                        <div class="col-sm-2 input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="openFolder('#eqDir')" type="button">Choose</button>
                         </div>
                     </div>
                 </div>
@@ -79,8 +83,11 @@
                     </div>
                     <div class="form-group row">
                         <label for="inDir" class="col-sm-4 col-form-label">Indices Directory:</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="inDir" name="inDir">
+                        </div>
+                        <div class="col-sm-2 input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="openFolder('#inDir')" type="button">Choose</button>
                         </div>
                     </div>
                 </div>
@@ -101,8 +108,11 @@
                     </div>
                     <div class="form-group row">
                         <label for="fuDir" class="col-sm-4 col-form-label">Futures Directory:</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="fuDir" name="fuDir">
+                        </div>
+                        <div class="col-sm-2 input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="openFolder('#fuDir')" type="button">Choose</button>
                         </div>
                     </div>
                 </div>
@@ -116,8 +126,11 @@
                     </div>
                     <div class="form-group row">
                         <label for="allDir" class="col-sm-4 col-form-label">Consolidation Directory:</label>
-                        <div class="col-sm-8">
+                        <div class="col-sm-6">
                             <input type="text" class="form-control" id="allDir" name="allDir">
+                        </div>
+                        <div class="col-sm-2 input-group-append">
+                            <button class="btn btn-outline-secondary" onclick="openFolder('#allDir')" type="button">Choose</button>
                         </div>
                     </div>
                 </div>
@@ -165,6 +178,7 @@
             <div class="container">
                 <h1 class="display-4">StockD v<span id="versionTxt">4.0</span></h1>
                 <p class="lead">Detailed user guide can be found at <a target="_blank" href="https://github.com/virresh/StockD/wiki/User-Guide">https://github.com/virresh/StockD/wiki/User-Guide</a>.</p>
+                <p class="lead">You can also ask for help via <a target="_blank" href="https://gitter.im/virresh/StockD">gitter chatroom</a>.</p>
                 <p class="lead">If you find this software helpful, consider <a target="_blank" href="https://github.com/virresh/StockD/wiki/Contributing">contributing/donating</a>.</p>
                 <p style="text-align: right;"> -- <a target="_blank" href="https://virresh.github.io/">Viresh Gupta (@virresh)</a></p>
             </div>
@@ -217,6 +231,17 @@
                     swal("StockD", 'Download Failed!', 'error');
                 });
                 setDisable(true);
+            };
+            function openFolder(elemId) {
+                $.ajax({
+                    url: '/choose',
+                    type: 'POST',
+                }).done(function (data){
+                    var response = data;
+                    if (response['status'] == 'ok') {
+                        $(elemId).val(response['directory']);
+                    }
+                });
             };
             function setnews() {
                 $.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D").done(function(data) {

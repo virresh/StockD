@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="30mm"
+   height="30mm"
+   viewBox="0 0 30 30.000001"
+   version="1.1"
+   id="svg8"
+   inkscape:export-filename="/media/Common/GIT/StockD/StockD/python_client/app/static/img/icon.png"
+   inkscape:export-xdpi="86.400002"
+   inkscape:export-ydpi="86.400002"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="SDIcon.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.979899"
+     inkscape:cx="-202.05615"
+     inkscape:cy="39.51004"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer2"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Layer 2"
+     transform="translate(-61.752791,-18.745842)">
+    <g
+       id="g4783"
+       transform="translate(1.8438817,-0.38096414)">
+      <text
+         id="text4770"
+         y="47.185226"
+         x="70.837448"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;line-height:1.25;font-family:'Century Schoolbook L';-inkscape-font-specification:'Century Schoolbook L';letter-spacing:0px;word-spacing:0px;fill:#004200;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           id="tspan4768"
+           y="47.185226"
+           x="70.837448"
+           sodipodi:role="line"><tspan
+             style="stroke-width:0.26458332"
+             id="tspan4766"
+             y="47.185226"
+             x="70.837448">D</tspan></tspan></text>
+      <g
+         style="fill:#3f9dc8;fill-opacity:1;stroke:#000000;stroke-opacity:0.43809527"
+         inkscape:transform-center-y="-15.790462"
+         inkscape:transform-center-x="3.647635"
+         transform="matrix(-0.36109733,0,0,0.39079395,84.125917,20.677592)"
+         id="g11226">
+        <path
+           style="fill:#3f9dc8;fill-opacity:1;stroke:#000000;stroke-opacity:0.43809527"
+           inkscape:connector-curvature="0"
+           d="m 17,12 v 5 H 3 V 12 H 1 v 5 a 2,2 0 0 0 2,2 h 14 a 2,2 0 0 0 2,-2 v -5 z"
+           id="path11212" />
+        <path
+           style="fill:#3f9dc8;fill-opacity:1;stroke:#000000;stroke-opacity:0.43809527"
+           inkscape:connector-curvature="0"
+           d="M 10,15 15,9 H 11 V 1 H 9 V 9 H 5 Z"
+           id="path11214" />
+      </g>
+      <text
+         id="text11230"
+         y="45.499374"
+         x="60.135635"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:6.3499999px;line-height:1.25;font-family:Arial;-inkscape-font-specification:Arial;letter-spacing:0px;word-spacing:0px;fill:#b40f70;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="fill:#b40f70;fill-opacity:1;stroke-width:0.26458332"
+           y="45.499374"
+           x="60.135635"
+           id="tspan11228"
+           sodipodi:role="line">EOD</tspan></text>
+      <text
+         id="text4764"
+         y="39.885754"
+         x="58.896774"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.39999962px;line-height:1.25;font-family:'Century Schoolbook L';-inkscape-font-specification:'Century Schoolbook L';letter-spacing:0px;word-spacing:0px;display:inline;fill:#ce0000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           id="tspan4762"
+           y="39.885754"
+           x="58.896774"
+           sodipodi:role="line"><tspan
+             style="stroke-width:0.26458332"
+             id="tspan4760"
+             y="39.885754"
+             x="58.896774">S</tspan></tspan></text>
+    </g>
+  </g>
+</svg>

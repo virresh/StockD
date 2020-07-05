@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, abort, jsonify
-from flask import request, Response, g
+from flask import request, Response, g, url_for
 import json
 import time
 import os
@@ -11,6 +11,7 @@ import zipfile
 import pandas as pd
 import datetime
 import traceback
+import webview
 from multiprocessing.managers import BaseManager
 
 eventQ = queue.Queue(maxsize=100)
@@ -117,6 +118,7 @@ def process_day(configs, date):
     getQ().put({'event': 'log', 'data': date.strftime('Processing %Y-%b-%d')})
     if configs['SETTINGS']['advSkipWeekend']['value'] == 'true' and date.weekday() >= 5:
         getQ().put({'event': 'log', 'data': date.strftime('Skipping Weekend %Y-%b-%d')})
+        return 0
     else:
         if configs['SETTINGS']['eqCheck']['value'] == 'true':
             try:
@@ -148,7 +150,7 @@ def process_day(configs, date):
             except:
                 getQ().put({'event': 'log', 'data': date.strftime('Cannot Find IN Bhavcopy for %Y-%b-%d')})
 
-        if configs['SETTINGS']['allCheck']['value'] == 'true':
+        if configs['SETTINGS']['allCheck']['value'] == 'true' and not (eqdf is None and fudf is None and indf is None):
             try:
                 alllocation = os.path.join(configs['SETTINGS']['allDir']['value'], date.strftime('ALL_%Y%^b%d.txt'))
                 alldf = pd.concat([eqdf, fudf, indf])
@@ -159,20 +161,37 @@ def process_day(configs, date):
                 traceback.print_exception(type(err), err, err.__traceback__)
                 getQ().put({'event': 'log', 'data': date.strftime('Cannot consolidate for %Y-%b-%d')})
     getQ().put({'event': 'log', 'data': date.strftime('Done with %Y-%b-%d')})
+    if eqdf is None and fudf is None and indf is None:
+        return 0
+    else:
+        return 1
 
+
+@app.route('/choose', methods=['POST'])
+def choose_path():
+    dirs = app.winreference.create_file_dialog(webview.FOLDER_DIALOG)
+    if dirs and len(dirs) > 0:
+        directory = dirs[0]
+        if isinstance(directory, bytes):
+            directory = directory.decode('UTF-8')
+        response = {'status': 'ok', 'directory': directory}
+    else:
+        response = {'status': 'cancel'}
+    return jsonify(response)
 
 @app.route('/download', methods=['POST'])
 def process_range():
     done_days = 0
+    total_days = 0
     try:
         start = datetime.datetime.strptime(request.form['fromDate'], '%Y-%m-%d')
         end = datetime.datetime.strptime(request.form['toDate'], '%Y-%m-%d')
         print(start, end)
-        if not os.path.exists('./default_config.json'):
+        if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
             getQ().put({'event': 'progress', 'data': '-1'})
             return
 
-        with open('./default_config.json', 'r') as f:
+        with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
             main_config = json.load(f)
 
         if os.path.exists('./generate_config.json'):
@@ -185,15 +204,15 @@ def process_range():
         total_range = end - start + delta
         cur_day = start
         for day in range(0, total_range.days):
-            process_day(main_config, cur_day)
+            done_days += process_day(main_config, cur_day)
             cur_day = cur_day + delta
             getQ().put({'event': 'progress', 'data': str(int(((day+1) / total_range.days) * 100))})
-            done_days += 1
+            total_days += 1
     except Exception as ex:
         print(ex)
         getQ().put({'event': 'progress', 'data': '-1'})
 
-    return "Downloaded {} days".format(done_days)
+    return "Downloaded {}/{} days".format(done_days, total_days)
 
 @app.route('/')
 @app.route('/index')
@@ -217,10 +236,10 @@ def qadder(datapackage):
 
 @app.route('/getConfig', methods=['GET'])
 def getConfig():
-    if not os.path.exists('./default_config.json'):
+    if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         abort(404)
 
-    with open('./default_config.json', 'r') as f:
+    with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
         main_config = json.load(f)
 
     if os.path.exists('./generate_config.json'):
@@ -232,10 +251,10 @@ def getConfig():
 
 @app.route('/setConfig', methods=['POST'])
 def saveConfig():
-    if not os.path.exists('./default_config.json'):
+    if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         abort(404)
 
-    with open('./default_config.json', 'r') as f:
+    with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
         main_config = json.load(f)
 
     if os.path.exists('./generate_config.json'):
@@ -276,10 +295,10 @@ Stream is supposed provide three events:
 def getstream():
     m = "";
     main_config = None
-    if not os.path.exists('./default_config.json'):
+    if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         m = "Configuration files missing!"
     else:
-        with open('./default_config.json', 'r') as f:
+        with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
             main_config = json.load(f)
 
         if os.path.exists('./generate_config.json'):
