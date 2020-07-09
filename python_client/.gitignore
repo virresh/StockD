@@ -1,3 +1,10 @@
 .vscode/
 **/__pycache__
-
+EOD
+Equity
+Futures
+Indices
+build/
+dist/
+generate_config.json
+*.spec
