@@ -1,4 +1,4 @@
-pyinstaller runner.py --add-data "app\static;static" --add-data "app\templates;templates" --onefile --name "StockD" --icon ".\app\static\img\favicon.ico"
+..\..\stockdenv\Scripts\pyinstaller.exe runner.py --add-data "app\static;static" --add-data "app\templates;templates" --onefile --name "StockD_Windows" --icon ".\app\static\img\favicon.ico"
 
 python -m venv stockdenv
 ..\..\stockdenv\Scripts\pip.exe install Flask==1.1.2
