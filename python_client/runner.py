@@ -5,6 +5,7 @@ import threading
 import sys
 import random
 import socket
+import platform
 from contextlib import redirect_stdout
 from io import StringIO
 from app import app as server
@@ -41,6 +42,9 @@ if __name__ == '__main__':
         window = webview.create_window(
             'StockD', 'http://localhost:{}'.format(p))
         server.winreference = window
-        webview.start(debug=False)
+        if platform.system() == "Windows":
+            webview.start(gui='cef', debug=False)
+        else:
+            webview.start(debug=False)
         # x.terminate()
         sys.exit(0)
