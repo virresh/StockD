@@ -29,10 +29,10 @@ However, if you're downloading lots of data, be mindful of NSE's server's bandwi
 - Where to get help?  
 I welcome everyone to join in the [gitter chatroom](https://gitter.im/virresh/StockD) and help each other out.
 
-### Steps to run (For Users):
+### Steps to run (For Users), from version 4.1 onwards:
+- Install Microsoft dot net (latest version. >= version 4.8 is recommended) from https://dotnet.microsoft.com/download/dotnet-framework
 - Download the latest release from https://github.com/virresh/StockD/releases/latest.
-- Unzip the files into a single folder
-- Run using the provided Launcher.bat (on Windows) or Launcher.sh (on Linux) or LauncherMac.sh (on MacOS)
+- Run the .exe on Windows
 
 In case you find any bugs, please file an issue: https://github.com/virresh/StockD/issues  
 In case you need help/want to connect with other StockD users, join the chatroom at: https://gitter.im/virresh/StockD  
