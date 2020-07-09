@@ -16,6 +16,26 @@ from multiprocessing.managers import BaseManager
 
 eventQ = queue.Queue(maxsize=100)
 
+class dWrapper:
+    def __init__(self, date):
+        self.date = date
+
+    def __format__(self, spec):
+        caps = False
+        if '^' in spec:
+            caps = True
+            spec = spec.replace('^', '')
+        out = self.date.strftime(spec)
+        if caps:
+            out = out.upper()
+        return out
+
+    def __getattr__(self, key):
+        return getattr(self.date, key)
+
+def parse(d, s):
+    return s.format(dWrapper(d))
+
 def getQ():
     # if not hasattr(g, 'eventQ'):
     #     # manager = BaseManager(('', 37844), b'password')
@@ -54,7 +74,7 @@ def process_eq(weblink, saveloc, d):
         'TOTTRDQTY': 'VOLUME'
     }
     df = df.rename(columns=cname_map)
-    df['DATE'] = [d.strftime('%Y%m%d')] * len(df)
+    df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df['OI'] = ['0.0'] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
@@ -85,7 +105,7 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
         'OPEN_INT': 'OI'
     }
     df = df.rename(columns=cname_map)
-    df['DATE'] = [d.strftime('%Y%m%d')] * len(df)
+    df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
     return df
@@ -104,7 +124,7 @@ def process_in(weblink, saveloc, d):
         'Volume': 'VOLUME'
     }
     df = df.rename(columns=cname_map)
-    df['DATE'] = [d.strftime('%Y%m%d')] * len(df)
+    df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df['OI'] = ['0.0'] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.replace(' ', '_'))
@@ -115,52 +135,56 @@ def process_day(configs, date):
     eqdf = None
     fudf = None
     indf = None
-    getQ().put({'event': 'log', 'data': date.strftime('Processing %Y-%b-%d')})
+    getQ().put({'event': 'log', 'data': parse(date, 'Processing {0:%Y}-{0:%b}-{0:%d}')})
     if configs['SETTINGS']['advSkipWeekend']['value'] == 'true' and date.weekday() >= 5:
-        getQ().put({'event': 'log', 'data': date.strftime('Skipping Weekend %Y-%b-%d')})
+        getQ().put({'event': 'log', 'data': parse(date, 'Skipping Weekend {0:%Y}-{0:%b}-{0:%d}')})
         return 0
     else:
         if configs['SETTINGS']['eqCheck']['value'] == 'true':
             try:
-                eqlink = date.strftime(configs['LINKS']['eqBhav']['link'])
-                eqlocation = os.path.join(configs['SETTINGS']['eqDir']['value'], date.strftime('EQ_%Y%^b%d.txt'))
+                eqlink = parse(date, configs['LINKS']['eqBhav']['link'])
+                eqlocation = os.path.join(configs['SETTINGS']['eqDir']['value'], parse(date, 'EQ_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['eqDir']['value']):
                     os.makedirs(configs['SETTINGS']['eqDir']['value'], exist_ok=True)
                 eqdf = process_eq(eqlink, eqlocation, date)
+                getQ().put({'event': 'log', 'data': parse(date, 'Convert Equity Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except:
-                getQ().put({'event': 'log', 'data': date.strftime('Cannot Find EQ Bhavcopy for %Y-%b-%d')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find EQ Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['fuCheck']['value'] == 'true':
             try:
-                fulink = date.strftime(configs['LINKS']['fuBhav']['link'])
-                fulocation = os.path.join(configs['SETTINGS']['fuDir']['value'], date.strftime('FU_%Y%^b%d.txt'))
+                fulink = parse(date, configs['LINKS']['fuBhav']['link'])
+                fulocation = os.path.join(configs['SETTINGS']['fuDir']['value'], parse(date, 'FU_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['fuDir']['value']):
                     os.makedirs(configs['SETTINGS']['fuDir']['value'], exist_ok=True)
                 fudf = process_fu(fulink, fulocation, date)
+                getQ().put({'event': 'log', 'data': parse(date, 'Convert Futures Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except:
-                getQ().put({'event': 'log', 'data': date.strftime('Cannot Find FU Bhavcopy for %Y-%b-%d')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find FU Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['inCheck']['value'] == 'true':
             try:
-                inlink = date.strftime(configs['LINKS']['indall']['link'])
-                inlocation = os.path.join(configs['SETTINGS']['inDir']['value'], date.strftime('IN_%Y%^b%d.txt'))
+                inlink = parse(date, configs['LINKS']['indall']['link'])
+                inlocation = os.path.join(configs['SETTINGS']['inDir']['value'], parse(date, 'IN_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['inDir']['value']):
                     os.makedirs(configs['SETTINGS']['inDir']['value'], exist_ok=True)
                 indf = process_in(inlink, inlocation, date)
+                getQ().put({'event': 'log', 'data': parse(date, 'Converted Index Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except:
-                getQ().put({'event': 'log', 'data': date.strftime('Cannot Find IN Bhavcopy for %Y-%b-%d')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find IN Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['allCheck']['value'] == 'true' and not (eqdf is None and fudf is None and indf is None):
             try:
-                alllocation = os.path.join(configs['SETTINGS']['allDir']['value'], date.strftime('ALL_%Y%^b%d.txt'))
+                alllocation = os.path.join(configs['SETTINGS']['allDir']['value'], parse(date, 'ALL_{0:%Y}{0:%^b}{0:%d}.txt'))
                 alldf = pd.concat([eqdf, fudf, indf])
                 if not os.path.exists(configs['SETTINGS']['allDir']['value']):
                     os.makedirs(configs['SETTINGS']['allDir']['value'], exist_ok=True)
                 alldf.to_csv(alllocation, header=False, index=False)
+                getQ().put({'event': 'log', 'data': parse(date, 'Consolidated for {0:%Y}-{0:%b}-{0:%d}')})
             except Exception as err:
                 traceback.print_exception(type(err), err, err.__traceback__)
-                getQ().put({'event': 'log', 'data': date.strftime('Cannot consolidate for %Y-%b-%d')})
-    getQ().put({'event': 'log', 'data': date.strftime('Done with %Y-%b-%d')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot consolidate for {0:%Y}-{0:%b}-{0:%d}')})
+    getQ().put({'event': 'log', 'data': parse(date, 'Done with {0:%Y}-{0:%b}-{0:%d}')})
     if eqdf is None and fudf is None and indf is None:
         return 0
     else:
