@@ -13,6 +13,8 @@ If you find this software useful, consider [contributing](https://github.com/vir
 - Convert the EOD data into a common format which can be used by several professional softwares for charting
 
 ## F.A.Q
+- Application doesn't start up!  
+The application is slow to load when starting for the first time. Thus, please wait a while (~5 minutes) on the first load. If you get an error, or it doesn't start up, ensure you have latest [Microsoft Dot Net](https://dotnet.microsoft.com/download/dotnet-framework) version installed.
 - Who provides this data?  
 The data provided can be set using given profiles. All the current profiles fetch data from Official NSE website. You may be able to use other community-supplied profiles as well.
 - What is the Data Format?  
@@ -30,7 +32,7 @@ However, if you're downloading lots of data, be mindful of NSE's server's bandwi
 I welcome everyone to join in the [gitter chatroom](https://gitter.im/virresh/StockD) and help each other out.
 
 ### Steps to run (For Users), from version 4.1 onwards:
-- Install Microsoft dot net (latest version. >= version 4.8 is recommended) from https://dotnet.microsoft.com/download/dotnet-framework
+- Install Microsoft dot net (latest version. >= version 4.8 is recommended) from https://dotnet.microsoft.com/download/dotnet-framework. Not required on most modern windows, so feel free to skip this step and return to it later if the application doesn't start.
 - Download the latest release from https://github.com/virresh/StockD/releases/latest.
 - Run the .exe on Windows
 
