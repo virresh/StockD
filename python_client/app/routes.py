@@ -80,7 +80,6 @@ def process_eq(weblink, saveloc, d):
     df.to_csv(saveloc, header=None, index=None)
     return df
 
-
 def process_fu(weblink, saveloc, d, asPrefix=False):
     df = get_csv(weblink)
     df = df[df['INSTRUMENT'].isin(['FUTIDX', 'FUTSTK'])]
@@ -110,8 +109,7 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
     df.to_csv(saveloc, header=None, index=None)
     return df
 
-
-def process_in(weblink, saveloc, d):
+def process_in(weblink, saveloc, d, index_mapping={}):
     df = get_csv(weblink)
     df = df.replace('-', '0.0')
 
@@ -127,7 +125,14 @@ def process_in(weblink, saveloc, d):
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df['OI'] = ['0.0'] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
-    df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.replace(' ', '_'))
+    df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.upper())
+    def _rename(item):
+        if item in index_mapping and index_mapping[item] is not None:
+            return index_mapping[item]
+        else:
+            return item.replace('NIFTY', 'NSE').replace(' ', '')
+    # df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.replace(' ', '_'))
+    df['SYMBOL'] = df['SYMBOL'].apply(_rename)
     df.to_csv(saveloc, header=None, index=None)
     return df
 
@@ -190,6 +195,31 @@ def process_day(configs, date):
     else:
         return 1
 
+def loadConfigFromDisk():
+    with open(os.path.join(app.static_folder, 'default_config.json'),
+              'r') as f:
+        main_config = json.load(f)
+
+    if os.path.exists('./generate_config.json'):
+        with open('./generate_config.json', 'r') as f:
+            aux_config = json.load(f)
+            main_config.update(aux_config)
+
+    states = main_config['INDICES']
+    defaultstate = main_config['SETTINGS']['inKeepOthersCheck']['value']
+    index_state_map = {}
+    for k, v in main_config['index_map'].items():
+        index_state_map[v] = {"type": "checkbox", "value": defaultstate}
+        if v in states:
+            index_state_map[v].update(states[v])
+    
+    main_config['INDICES'] = index_state_map
+
+    return main_config
+
+def saveConfigToDisk(main_config):
+    with open('./generate_config.json', 'w') as f:
+        json.dump(main_config, f)
 
 @app.route('/choose', methods=['POST'])
 def choose_path():
@@ -245,7 +275,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.1"
+    return "4.2"
 
 @app.route('/test', methods=['POST'])
 def test():
@@ -263,13 +293,7 @@ def getConfig():
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         abort(404)
 
-    with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
-        main_config = json.load(f)
-
-    if os.path.exists('./generate_config.json'):
-        with open('./generate_config.json', 'r') as f:
-            aux_config = json.load(f)
-            main_config.update(aux_config)
+    main_config = loadConfigFromDisk()
 
     return jsonify(main_config)
 
@@ -278,13 +302,7 @@ def saveConfig():
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         abort(404)
 
-    with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
-        main_config = json.load(f)
-
-    if os.path.exists('./generate_config.json'):
-        with open('./generate_config.json', 'r') as f:
-            aux_config = json.load(f)
-            main_config.update(aux_config)
+    main_config = loadConfigFromDisk()
 
     if(not request.is_json):
         d = request.form
@@ -293,6 +311,11 @@ def saveConfig():
         for key in main_config['SETTINGS']:
             if key in d:
                 main_config['SETTINGS'][key]['value'] = d[key]
+        
+        for key in main_config['INDICES']:
+            if key in d:
+                print(key, d[key])
+                main_config['INDICES'][key]['value'] = d[key]
     else:
         d = request.get_json()
         print(d)
@@ -303,8 +326,10 @@ def saveConfig():
         if "LINKS" in d:
             main_config["LINKS"].update(d["LINKS"])
 
-    with open('./generate_config.json', 'w') as f:
-        json.dump(main_config, f)
+        if "index_map" in d:
+            main_config["index_map"].update(d["index_map"])
+
+    saveConfigToDisk(main_config)
 
     return 'Setting Update Succesful'
 
@@ -345,3 +370,24 @@ def getstream():
     getQ().put({'event': 'message', 'data': m})
     return Response(attachToStream(),
                     mimetype='text/event-stream')
+
+@app.route('/news')
+def getnews():
+    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D")
+    if r.status_code != 200:
+        abort(404)
+    else:
+        return r.content.decode('UTF-8-sig')
+
+@app.route('/getIndexNames')
+def getInNmes():
+    main_config = loadConfigFromDisk()
+    states = main_config['INDICES']
+    defaultstate = main_config['SETTINGS']['inKeepOthersCheck']['value']
+    index_state_map = {}
+    for k, v in main_config['index_map'].items():
+        index_state_map[v] = {"type": "checkbox", "value": defaultstate}
+        if v in states:
+            index_state_map[v].update(states[v])
+
+    return jsonify(index_state_map)
