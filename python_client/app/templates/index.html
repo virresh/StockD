@@ -117,12 +117,14 @@
                                             </button>
                                         </div>
                                         <div class="modal-body">
+                                            <button class="btn btn-info" onclick="setAll('true', '#inFilterModal')">Check All</button>
+                                            <button class="btn btn-info" onclick="setAll('false', '#inFilterModal')">UnCheck All</button>
                                             <div id="inFilterModal">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary">Save changes</button>
+                                            <button type="button" class="btn btn-primary" onclick="submitForm('#preferencesForm')">Save changes</button>
                                         </div>
                                     </div>
                                 </div>
@@ -161,6 +163,14 @@
                         <div class="col-sm-8">
                             <!-- <input type="hidden" value="false" name="allCheck"> -->
                             <input type="hidden" value="false" name="allCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="allCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="allCheck" class="col-sm-4 col-form-label">Include Futures?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="allCheck"> -->
+                            <input type="hidden" value="false" name="allIncludeFUCheck"><input type="checkbox" onclick="jankyCheckbox(this)"
+                                class="form-control booleancheck" id="allIncludeFUCheck">
                         </div>
                     </div>
                     <div class="form-group row">
@@ -316,6 +326,15 @@
                     item.previousSibling.value = 'true';
                 }
             };
+            function setAll(tvalue, parentId) {
+                event.preventDefault();
+                $(parentId + ' :input').each(function () {
+                    if($(this).hasClass('booleancheck') && "" + $(this).prop('checked') != tvalue){
+                        $(this).click();
+                        console.log($(this));
+                    }
+                });
+            };
             function logListener(event) {
                 var theDiv = document.getElementById("logContainer");
                 var content = document.createTextNode(event.data);
@@ -380,11 +399,12 @@
                 await $.get('/getConfig').done(function (data) {
 
                     var inFilterModal = document.getElementById('inFilterModal');
+                    inFilterModal.innerHTML = '';
                     var template = document.getElementById('mInFilterTemplate').innerHTML;
                     for(r in data['INDICES']){
                         var dataelem = {
                             lbl: r,
-                            val: data['INDICES'][r]['value']
+                            val: "false"
                         }
                         // console.log(dataelem);
                         // console.log(Mustache.render(template, dataelem))
@@ -398,6 +418,7 @@
                         else {
                             $('#' + r).click();
                         }
+                        $('#' + r).val(data['INDICES'][r]['value']);
                     }
 
 

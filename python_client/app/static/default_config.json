@@ -40,6 +40,10 @@
             "type": "checkbox",
             "value": "true"
         },
+        "allIncludeFUCheck": {
+            "type": "checkbox",
+            "value": "false"
+        },
         "allDir": {
             "type": "directory",
             "value": "./EOD"

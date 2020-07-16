@@ -12,6 +12,7 @@ import pandas as pd
 import datetime
 import traceback
 import webview
+import collections.abc
 from multiprocessing.managers import BaseManager
 
 eventQ = queue.Queue(maxsize=100)
@@ -43,6 +44,14 @@ def getQ():
     #     # manager.connect()
     #     g.eventQ = queue.Queue(maxsize=100)
     return eventQ
+
+def update(d, u):
+    for k, v in u.items():
+        if isinstance(v, collections.abc.Mapping):
+            d[k] = update(d.get(k, {}), v)
+        else:
+            d[k] = v
+    return d
 
 def attachToStream():
     while True:
@@ -109,7 +118,7 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
     df.to_csv(saveloc, header=None, index=None)
     return df
 
-def process_in(weblink, saveloc, d, index_mapping={}):
+def process_in(weblink, saveloc, d, index_mapping={}, keeplist=set(), keepall='false'):
     df = get_csv(weblink)
     df = df.replace('-', '0.0')
 
@@ -127,12 +136,17 @@ def process_in(weblink, saveloc, d, index_mapping={}):
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.upper())
     def _rename(item):
-        if item in index_mapping and index_mapping[item] is not None:
+        if item in index_mapping and index_mapping[item] in keeplist:
             return index_mapping[item]
-        else:
+        elif item in index_mapping and keepall != 'false':
+            return index_mapping[item]
+        elif keepall != 'false':
             return item.replace('NIFTY', 'NSE').replace(' ', '')
+        else:
+            return None
     # df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.replace(' ', '_'))
     df['SYMBOL'] = df['SYMBOL'].apply(_rename)
+    df = df.dropna()
     df.to_csv(saveloc, header=None, index=None)
     return df
 
@@ -173,13 +187,23 @@ def process_day(configs, date):
                 inlocation = os.path.join(configs['SETTINGS']['inDir']['value'], parse(date, 'IN_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['inDir']['value']):
                     os.makedirs(configs['SETTINGS']['inDir']['value'], exist_ok=True)
-                indf = process_in(inlink, inlocation, date)
+                
+                index_mapping = configs['index_map']
+                keeplist = set()
+
+                for key, val in index_mapping.items():
+                    if configs['INDICES'][val]['value'] == 'true':
+                        keeplist.add(val)
+
+                indf = process_in(inlink, inlocation, date, index_mapping, keeplist, configs['SETTINGS']['inKeepOthersCheck']['value'])
                 getQ().put({'event': 'log', 'data': parse(date, 'Converted Index Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except:
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find IN Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['allCheck']['value'] == 'true' and not (eqdf is None and fudf is None and indf is None):
             try:
+                if configs['SETTINGS']['allIncludeFUCheck']['value'] == 'false':
+                    fudf = None
                 alllocation = os.path.join(configs['SETTINGS']['allDir']['value'], parse(date, 'ALL_{0:%Y}{0:%^b}{0:%d}.txt'))
                 alldf = pd.concat([eqdf, fudf, indf])
                 if not os.path.exists(configs['SETTINGS']['allDir']['value']):
@@ -203,7 +227,7 @@ def loadConfigFromDisk():
     if os.path.exists('./generate_config.json'):
         with open('./generate_config.json', 'r') as f:
             aux_config = json.load(f)
-            main_config.update(aux_config)
+            main_config = update(main_config, aux_config)
 
     states = main_config['INDICES']
     defaultstate = main_config['SETTINGS']['inKeepOthersCheck']['value']
@@ -211,7 +235,7 @@ def loadConfigFromDisk():
     for k, v in main_config['index_map'].items():
         index_state_map[v] = {"type": "checkbox", "value": defaultstate}
         if v in states:
-            index_state_map[v].update(states[v])
+            index_state_map[v] = update(index_state_map[v], states[v])
     
     main_config['INDICES'] = index_state_map
 
@@ -245,13 +269,7 @@ def process_range():
             getQ().put({'event': 'progress', 'data': '-1'})
             return
 
-        with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
-            main_config = json.load(f)
-
-        if os.path.exists('./generate_config.json'):
-            with open('./generate_config.json', 'r') as f:
-                aux_config = json.load(f)
-                main_config.update(aux_config)
+        main_config = loadConfigFromDisk()
 
         getQ().put({'event': 'progress', 'data': '0'})
         delta = datetime.timedelta(1)
@@ -321,13 +339,13 @@ def saveConfig():
         print(d)
 
         if "BASELINK" in d:
-            main_config["BASELINK"].update(d["BASELINK"])
+            main_config["BASELINK"] = update(main_config["BASELINK"], d["BASELINK"])
 
         if "LINKS" in d:
-            main_config["LINKS"].update(d["LINKS"])
+            main_config["LINKS"] = update(main_config["LINKS"], d["LINKS"])
 
         if "index_map" in d:
-            main_config["index_map"].update(d["index_map"])
+            main_config["index_map"] = update(main_config["index_map"], d["index_map"])
 
     saveConfigToDisk(main_config)
 
