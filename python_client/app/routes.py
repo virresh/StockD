@@ -109,7 +109,7 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
             row['SYMBOL'] = row['SYMBOL'] + '-' + prefix
 
     cname_map = {
-        'VAL_INLAKH': 'VOLUME',
+        'CONTRACTS': 'VOLUME',
         'OPEN_INT': 'OI'
     }
     df = df.rename(columns=cname_map)
