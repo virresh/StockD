@@ -84,7 +84,7 @@ def process_eq(weblink, saveloc, d):
     }
     df = df.rename(columns=cname_map)
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
-    df['OI'] = ['0.0'] * len(df)
+    df['OI'] = ['0'] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
     return df
@@ -120,7 +120,7 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
 
 def process_in(weblink, saveloc, d, index_mapping={}, keeplist=set(), keepall='false'):
     df = get_csv(weblink)
-    df = df.replace('-', '0.0')
+    df = df.replace('-', '0')
 
     cname_map = {
         'Index Name': 'SYMBOL',
@@ -132,7 +132,7 @@ def process_in(weblink, saveloc, d, index_mapping={}, keeplist=set(), keepall='f
     }
     df = df.rename(columns=cname_map)
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
-    df['OI'] = ['0.0'] * len(df)
+    df['OI'] = ['0'] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.upper())
     def _rename(item):
@@ -293,7 +293,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.2"
+    return "4.3"
 
 @app.route('/test', methods=['POST'])
 def test():
