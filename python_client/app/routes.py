@@ -13,9 +13,20 @@ import datetime
 import traceback
 import webview
 import collections.abc
+import logging
 from multiprocessing.managers import BaseManager
 
+SECURE_FLAG = False
 eventQ = queue.Queue(maxsize=100)
+logging.basicConfig(filename='stockd_debuglog.txt',
+                    filemode='w',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
+
+logging.info("Running StockD")
+logging.info("StockD Secure Flag == " + str(SECURE_FLAG))
+logger = logging.getLogger('StockD')
 
 class dWrapper:
     def __init__(self, date):
@@ -44,6 +55,9 @@ def getQ():
     #     # manager.connect()
     #     g.eventQ = queue.Queue(maxsize=100)
     return eventQ
+    
+def getLogger():
+    return logger
 
 def update(d, u):
     for k, v in u.items():
@@ -56,14 +70,16 @@ def update(d, u):
 def attachToStream():
     while True:
         item = getQ().get()
-        print(item)
+        # print(item)
+        getLogger().info(str(item))
         yield "event: {}\ndata: {}\n\n".format(item['event'], item['data'])
 
 def get_csv(weblink):
+    global SECURE_FLAG
     headers = {
         'user-agent': 'Python Client'
     }
-    r = requests.get(weblink, headers=headers)
+    r = requests.get(weblink, headers=headers, verify=SECURE_FLAG)
     if r.status_code != 200:
         return None
 
@@ -151,6 +167,7 @@ def process_in(weblink, saveloc, d, index_mapping={}, keeplist=set(), keepall='f
     return df
 
 def process_day(configs, date):
+    getLogger().info('Processing date ' + str(date))
     eqdf = None
     fudf = None
     indf = None
@@ -162,28 +179,36 @@ def process_day(configs, date):
         if configs['SETTINGS']['eqCheck']['value'] == 'true':
             try:
                 eqlink = parse(date, configs['LINKS']['eqBhav']['link'])
+                getLogger().info('Trying Equity Bhavcopy from ' + eqlink)
                 eqlocation = os.path.join(configs['SETTINGS']['eqDir']['value'], parse(date, 'EQ_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['eqDir']['value']):
                     os.makedirs(configs['SETTINGS']['eqDir']['value'], exist_ok=True)
                 eqdf = process_eq(eqlink, eqlocation, date)
+                getLogger().info('EQ Bhavcopy success')
                 getQ().put({'event': 'log', 'data': parse(date, 'Convert Equity Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
-            except:
+            except Exception as e:
+                getLogger().info('EQ Bhavcopy failed')
+                getLogger().info(str(e))
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find EQ Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['fuCheck']['value'] == 'true':
             try:
                 fulink = parse(date, configs['LINKS']['fuBhav']['link'])
+                getLogger().info('Trying Futures Bhavcopy from ' + fulink)
                 fulocation = os.path.join(configs['SETTINGS']['fuDir']['value'], parse(date, 'FU_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['fuDir']['value']):
                     os.makedirs(configs['SETTINGS']['fuDir']['value'], exist_ok=True)
                 fudf = process_fu(fulink, fulocation, date)
                 getQ().put({'event': 'log', 'data': parse(date, 'Convert Futures Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
-            except:
+            except Exception as e:
+                getLogger().info('FU Bhavcopy failed')
+                getLogger().info(str(e))
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find FU Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['inCheck']['value'] == 'true':
             try:
                 inlink = parse(date, configs['LINKS']['indall']['link'])
+                getLogger().info('Trying Index Bhavcopy from ' + inlink)
                 inlocation = os.path.join(configs['SETTINGS']['inDir']['value'], parse(date, 'IN_{0:%Y}{0:%^b}{0:%d}.txt'))
                 if not os.path.exists(configs['SETTINGS']['inDir']['value']):
                     os.makedirs(configs['SETTINGS']['inDir']['value'], exist_ok=True)
@@ -197,7 +222,9 @@ def process_day(configs, date):
 
                 indf = process_in(inlink, inlocation, date, index_mapping, keeplist, configs['SETTINGS']['inKeepOthersCheck']['value'])
                 getQ().put({'event': 'log', 'data': parse(date, 'Converted Index Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
-            except:
+            except Exception as e:
+                getLogger().info('IN Bhavcopy failed')
+                getLogger().info(str(e))
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find IN Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['allCheck']['value'] == 'true' and not (eqdf is None and fudf is None and indf is None):
@@ -212,6 +239,8 @@ def process_day(configs, date):
                 getQ().put({'event': 'log', 'data': parse(date, 'Consolidated for {0:%Y}-{0:%b}-{0:%d}')})
             except Exception as err:
                 traceback.print_exception(type(err), err, err.__traceback__)
+                getLogger().info('ALL Bhavcopy failed')
+                getLogger().info(str(err))
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot consolidate for {0:%Y}-{0:%b}-{0:%d}')})
     getQ().put({'event': 'log', 'data': parse(date, 'Done with {0:%Y}-{0:%b}-{0:%d}')})
     if eqdf is None and fudf is None and indf is None:
@@ -220,6 +249,7 @@ def process_day(configs, date):
         return 1
 
 def loadConfigFromDisk():
+    getLogger().info('Attempting configuration load')
     with open(os.path.join(app.static_folder, 'default_config.json'),
               'r') as f:
         main_config = json.load(f)
@@ -238,12 +268,14 @@ def loadConfigFromDisk():
             index_state_map[v] = update(index_state_map[v], states[v])
     
     main_config['INDICES'] = index_state_map
-
+    getLogger().info('Configuration loading success')
     return main_config
 
 def saveConfigToDisk(main_config):
+    getLogger().info('Attempting Configuration save')
     with open('./generate_config.json', 'w') as f:
         json.dump(main_config, f)
+        getLogger().info('Configuration save success')
 
 @app.route('/choose', methods=['POST'])
 def choose_path():
@@ -265,6 +297,7 @@ def process_range():
         start = datetime.datetime.strptime(request.form['fromDate'], '%Y-%m-%d')
         end = datetime.datetime.strptime(request.form['toDate'], '%Y-%m-%d')
         print(start, end)
+        getLogger().info('Processing ' + str(start) + ' till ' + str(end))
         if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
             getQ().put({'event': 'progress', 'data': '-1'})
             return
@@ -289,6 +322,7 @@ def process_range():
 @app.route('/')
 @app.route('/index')
 def index():
+    getLogger().info("Loaded Main Page.")
     return render_template('index.html')
 
 @app.route('/version')
@@ -360,27 +394,35 @@ Stream is supposed provide three events:
 """
 @app.route('/stream')
 def getstream():
+    global SECURE_FLAG
     m = "";
     main_config = None
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         m = "Configuration files missing!"
+        getLogger().info('Could not find configuration files!')
     else:
         with open(os.path.join(app.static_folder, 'default_config.json'), 'r') as f:
             main_config = json.load(f)
-
+        getLogger().info('Main Configuration loaded')
         if os.path.exists('./generate_config.json'):
             with open('./generate_config.json', 'r') as f:
                 aux_config = json.load(f)
                 main_config.update(aux_config)
+                getLogger().info('Auxiliary configuration loaded!')
+        else:
+            getLogger().info('No Auxiliary configuration!')
 
     if main_config is not None:
         vlink = main_config["LINKS"]["version"]['link']
-        r = requests.get(vlink)
+        r = requests.get(vlink, verify=SECURE_FLAG)
         if r.status_code != 200:
             m = "Cannot connect to internet! StockD requires internet to function! If you are sure you have internet connectivity, then report this and proceed with download."
+            getLogger().info('Status recieved: ' + r.status_code)
+            getLogger().info('Response Message: ' + r.message)
         else:
             latest_v = float(r.content.decode('UTF-8-sig'))
             cur_v = float(version())
+            getLogger().info('Internet Test success!')
             if cur_v < latest_v:
                 m = "An update is available! Please update to latest version for best performance."
             else:
@@ -391,10 +433,15 @@ def getstream():
 
 @app.route('/news')
 def getnews():
-    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D")
+    global SECURE_FLAG
+    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D", verify=SECURE_FLAG)
     if r.status_code != 200:
+        getLogger().info('News load failed!')
+        getLogger().info('Server says ' + r.status_code)
+        getLogger().info('Content: ' + r.message)
         abort(404)
     else:
+        getLogger().info('News Load success')
         return r.content.decode('UTF-8-sig')
 
 @app.route('/getIndexNames')
