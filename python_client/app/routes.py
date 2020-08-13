@@ -17,6 +17,7 @@ import logging
 from multiprocessing.managers import BaseManager
 
 SECURE_FLAG = True
+TIMEOUT_DURATION = 10
 eventQ = queue.Queue(maxsize=100)
 logging.basicConfig(filename='stockd_debuglog.txt',
                     filemode='w',
@@ -76,10 +77,11 @@ def attachToStream():
 
 def get_csv(weblink):
     global SECURE_FLAG
+    global TIMEOUT_DURATION
     headers = {
         'user-agent': 'Python Client'
     }
-    r = requests.get(weblink, headers=headers, verify=SECURE_FLAG)
+    r = requests.get(weblink, headers=headers, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
     if r.status_code != 200:
         return None
 
@@ -271,6 +273,7 @@ def process_day(configs, date):
 
 def loadConfigFromDisk():
     global SECURE_FLAG
+    global TIMEOUT_DURATION
     getLogger().info('Attempting configuration load')
     with open(os.path.join(app.static_folder, 'default_config.json'),
               'r') as f:
@@ -290,10 +293,13 @@ def loadConfigFromDisk():
             index_state_map[v] = update(index_state_map[v], states[v])
 
     if 'insecureMode' in main_config['SETTINGS']:
-        if main_config['SETTINGS']['insecureMode'] == 'false':
+        if main_config['SETTINGS']['insecureMode']['value'] == 'true':
             SECURE_FLAG = False
         else:
             SECURE_FLAG = True
+    
+    if 'rTimeout' in main_config['SETTINGS']:
+        TIMEOUT_DURATION = int(main_config['SETTINGS']['rTimeout']['value'])
 
     main_config['INDICES'] = index_state_map
     getLogger().info('Configuration loading success')
@@ -319,6 +325,7 @@ def choose_path():
 
 @app.route('/download', methods=['POST'])
 def process_range():
+    global TIMEOUT_DURATION
     done_days = 0
     total_days = 0
     try:
@@ -326,6 +333,7 @@ def process_range():
         end = datetime.datetime.strptime(request.form['toDate'], '%Y-%m-%d')
         print(start, end)
         getLogger().info('Processing ' + str(start) + ' till ' + str(end))
+        getLogger().info('Using a timout of ' + str(TIMEOUT_DURATION) + " s")
         if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
             getQ().put({'event': 'progress', 'data': '-1'})
             return
@@ -410,6 +418,7 @@ def saveConfig():
             main_config["index_map"] = update(main_config["index_map"], d["index_map"])
 
     saveConfigToDisk(main_config)
+    getLogger().info("recieved config -- " + str(d))
 
     return 'Setting Update Succesful'
 
@@ -423,6 +432,7 @@ Stream is supposed provide three events:
 @app.route('/stream')
 def getstream():
     global SECURE_FLAG
+    global TIMEOUT_DURATION
     m = "";
     main_config = None
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
@@ -442,7 +452,7 @@ def getstream():
 
     if main_config is not None:
         vlink = main_config["LINKS"]["version"]['link']
-        r = requests.get(vlink, verify=SECURE_FLAG)
+        r = requests.get(vlink, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
         if r.status_code != 200:
             m = "Cannot connect to internet! StockD requires internet to function! If you are sure you have internet connectivity, then report this and proceed with download."
             getLogger().info('Status recieved: ' + r.status_code)
@@ -462,7 +472,8 @@ def getstream():
 @app.route('/news')
 def getnews():
     global SECURE_FLAG
-    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D", verify=SECURE_FLAG)
+    global TIMEOUT_DURATION
+    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D", verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
     if r.status_code != 200:
         getLogger().info('News load failed!')
         getLogger().info('Server says ' + r.status_code)

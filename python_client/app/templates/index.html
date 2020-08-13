@@ -206,6 +206,12 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="rTimeout" class="col-sm-4 col-form-label">Request Timeout (<output id="rtm" for="rangeInput">10</output> seconds)</label>
+                        <div class="col-sm-8">
+                            <input type="range" class="form-control-range" oninput="rtm.value=rTimeout.value" value="1" id="rTimeout" name="rTimeout" min="1" max="60" step="1">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="allDir" class="col-sm-4 col-form-label">Load Link Profile from:</label>
                         <div class="col-sm-4">
                             <select type="text" class="form-control" id="linkProfile">
@@ -447,6 +453,9 @@
                             else{
                                 $('#'+d).click();
                             }
+                        }
+                        else if(d == 'rTimeout'){
+                            $('#rtm').text(data['SETTINGS'][d]['value']);
                         }
                         $('#'+d).val(data['SETTINGS'][d]['value']);
                     }
