@@ -16,7 +16,7 @@ import collections.abc
 import logging
 from multiprocessing.managers import BaseManager
 
-SECURE_FLAG = False
+SECURE_FLAG = True
 eventQ = queue.Queue(maxsize=100)
 logging.basicConfig(filename='stockd_debuglog.txt',
                     filemode='w',
@@ -90,17 +90,35 @@ def get_csv(weblink):
         csvBytes = z.read(z.namelist()[0])
 
     df = pd.read_csv(io.BytesIO(csvBytes), dtype=str)
+    # strip any spaces if required
+    df.columns = df.columns.str.strip()
+    for col in df.columns:
+        df[col] = df[col].str.strip()
     return df
 
-def process_eq(weblink, saveloc, d):
+def process_eq(weblink, saveloc, d, get_delivery=None):
     df = get_csv(weblink)
+    df = df.replace('-', '0')
     df = df[df['SERIES'].isin(['EQ', 'BE'])]
     cname_map = {
-        'TOTTRDQTY': 'VOLUME'
+        'TOTTRDQTY': 'VOLUME',
+        'TTL_TRD_QNTY': 'VOLUME',
+        'OPEN_PRICE': 'OPEN',
+        'HIGH_PRICE': 'HIGH',
+        'LOW_PRICE': 'LOW',
+        'CLOSE_PRICE': 'CLOSE',
+        'DELIV_QTY': 'DELIVERY'
     }
     df = df.rename(columns=cname_map)
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df['OI'] = ['0'] * len(df)
+    if get_delivery is not None:
+        try:
+            df['OI'] = df['DELIVERY']
+        except Exception as ex:
+            getQ().put({'event': 'log', 'data': 'Delivery data unavailable on current server.'})
+            getLogger().info(str(ex))
+    getLogger().info('Could not reach here!.')
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
     return df
@@ -181,9 +199,12 @@ def process_day(configs, date):
                 eqlink = parse(date, configs['LINKS']['eqBhav']['link'])
                 getLogger().info('Trying Equity Bhavcopy from ' + eqlink)
                 eqlocation = os.path.join(configs['SETTINGS']['eqDir']['value'], parse(date, 'EQ_{0:%Y}{0:%^b}{0:%d}.txt'))
+                getDelivery = None
                 if not os.path.exists(configs['SETTINGS']['eqDir']['value']):
                     os.makedirs(configs['SETTINGS']['eqDir']['value'], exist_ok=True)
-                eqdf = process_eq(eqlink, eqlocation, date)
+                if configs['SETTINGS']['eqDeliveryDataCheck']['value'] == 'true':
+                    getDelivery = True
+                eqdf = process_eq(eqlink, eqlocation, date, get_delivery=getDelivery)
                 getLogger().info('EQ Bhavcopy success')
                 getQ().put({'event': 'log', 'data': parse(date, 'Convert Equity Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except Exception as e:
@@ -249,6 +270,7 @@ def process_day(configs, date):
         return 1
 
 def loadConfigFromDisk():
+    global SECURE_FLAG
     getLogger().info('Attempting configuration load')
     with open(os.path.join(app.static_folder, 'default_config.json'),
               'r') as f:
@@ -266,7 +288,13 @@ def loadConfigFromDisk():
         index_state_map[v] = {"type": "checkbox", "value": defaultstate}
         if v in states:
             index_state_map[v] = update(index_state_map[v], states[v])
-    
+
+    if 'insecureMode' in main_config['SETTINGS']:
+        if main_config['SETTINGS']['insecureMode'] == 'false':
+            SECURE_FLAG = False
+        else:
+            SECURE_FLAG = True
+
     main_config['INDICES'] = index_state_map
     getLogger().info('Configuration loading success')
     return main_config
@@ -327,7 +355,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.3"
+    return "4.4"
 
 @app.route('/test', methods=['POST'])
 def test():

@@ -64,6 +64,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="eqDeliveryDataCheck" class="col-sm-4 col-form-label">Use Open Interest column for Delivery Data? (only works on selected link profiles)</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="eqCheck"> -->
+                            <input type="hidden" value="false" name="eqDeliveryDataCheck" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="eqDeliveryDataCheck">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="eqDir" class="col-sm-4 col-form-label">Equity Directory:</label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="eqDir" name="eqDir">
@@ -82,7 +89,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="inCheck" class="col-sm-4 col-form-label">Keep Other Indices?</label>
+                        <label for="inCheck" class="col-sm-4 col-form-label">Keep All Indices?</label>
                         <div class="col-sm-8">
                             <!-- <input type="hidden" value="false" name="inCheck"> -->
                             <input type="hidden" value="false" name="inKeepOthersCheck"><input type="checkbox" onclick="jankyCheckbox(this)"
@@ -192,6 +199,13 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label for="insecureMode" class="col-sm-4 col-form-label">Insecure Mode?</label>
+                        <div class="col-sm-8">
+                            <!-- <input type="hidden" value="false" name="advSkipWeekend"> -->
+                            <input type="hidden" value="false" name="insecureMode" ><input type="checkbox" onclick="jankyCheckbox(this)" class="form-control booleancheck" id="insecureMode">
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label for="allDir" class="col-sm-4 col-form-label">Load Link Profile from:</label>
                         <div class="col-sm-4">
                             <select type="text" class="form-control" id="linkProfile">
@@ -226,6 +240,7 @@
         <div class="jumbotron jumbotron-fluid">
             <div class="container">
                 <h1 class="display-4">StockD v<span id="versionTxt">4.0</span></h1>
+                <p class="lead">Official Website <a target="_blank" href="https://virresh.github.io/projects/stockd">https://virresh.github.io/projects/stockd</a>.</p>
                 <p class="lead">Latest Release can be found at <a target="_blank" href="https://github.com/virresh/StockD/releases/latest">https://github.com/virresh/StockD/releases/latest</a>.</p>
                 <p class="lead">Details on Index Mapping can be found at <a target="_blank" href="https://github.com/virresh/StockD/wiki/Index-Mapping">https://github.com/virresh/StockD/wiki/Index-Mapping</a>.</p>
                 <p class="lead">Detailed user guide can be found at <a target="_blank" href="https://github.com/virresh/StockD/wiki/User-Guide">https://github.com/virresh/StockD/wiki/User-Guide</a>.</p>
