@@ -18,6 +18,7 @@ from multiprocessing.managers import BaseManager
 
 SECURE_FLAG = True
 TIMEOUT_DURATION = 10
+STOP_FLAG = False
 eventQ = queue.Queue(maxsize=100)
 logging.basicConfig(filename='stockd_debuglog.txt',
                     filemode='w',
@@ -324,11 +325,18 @@ def choose_path():
         response = {'status': 'cancel'}
     return jsonify(response)
 
+@app.route('/stop', methods=['GET'])
+def send_stop():
+    global STOP_FLAG
+    STOP_FLAG = True
+
 @app.route('/download', methods=['POST'])
 def process_range():
     global TIMEOUT_DURATION
+    global STOP_FLAG
     done_days = 0
     total_days = 0
+    message = ""
     try:
         start = datetime.datetime.strptime(request.form['fromDate'], '%Y-%m-%d')
         end = datetime.datetime.strptime(request.form['toDate'], '%Y-%m-%d')
@@ -346,15 +354,21 @@ def process_range():
         total_range = end - start + delta
         cur_day = start
         for day in range(0, total_range.days):
+            if STOP_FLAG == True:
+                STOP_FLAG = False
+                message = " Stopped via Stop Button."
+                break
             done_days += process_day(main_config, cur_day)
             cur_day = cur_day + delta
             getQ().put({'event': 'progress', 'data': str(int(((day+1) / total_range.days) * 100))})
             total_days += 1
     except Exception as ex:
         print(ex)
+        message = " Encountered an Error."
         getQ().put({'event': 'progress', 'data': '-1'})
 
-    return "Downloaded {}/{} days".format(done_days, total_days)
+    STOP_FLAG = False
+    return "Downloaded {}/{} days.{}".format(done_days, total_days, message)
 
 @app.route('/')
 @app.route('/index')
