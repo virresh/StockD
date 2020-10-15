@@ -1,7 +1,7 @@
 {
     "BASELINK": {
-        "base_URL": "https://archives.nseindia.com",
-        "stock_TYPE": "NSE Daily (with Delivery)"
+        "base_URL": "https://www.nseindia.com",
+        "stock_TYPE": "NSE Archives"
     },
     "SETTINGS": {
         "eqCheck": {
@@ -67,14 +67,14 @@
     },
     "LINKS": {
         "eqBhav": {
-            "link": "https://archives.nseindia.com/products/content/sec_bhavdata_full_{0:%d}{0:%m}{0:%Y}.csv"
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22CM%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22equities%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=equities&mode=single"
         },
         "fuBhav": {
-            "link": "https://archives.nseindia.com/content/historical/DERIVATIVES/{0:%Y}/{0:%^b}/fo{0:%d}{0:%^b}{0:%Y}bhav.csv.zip"
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22F%26O%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22derivatives%22%2C%22section%22%3A%22equity%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=equity&mode=single"
         },
         "indall": {
-            "link": "https://archives.nseindia.com/content/indices/ind_close_all_{0:%d}{0:%m}{0:%Y}.csv"
-        },
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Daily%20Snapshot%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22indices%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=indices&mode=single"
+        }, 
         "version": {
             "link": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
         }
