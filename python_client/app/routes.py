@@ -24,7 +24,8 @@ logging.basicConfig(filename='stockd_debuglog.txt',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
-
+session = requests.Session()
+session.get('https://www.nseindia.com/', headers = {'user-agent': 'Python Client'})
 logging.info("Running StockD")
 logging.info("StockD Secure Flag == " + str(SECURE_FLAG))
 logger = logging.getLogger('StockD')
@@ -81,7 +82,7 @@ def get_csv(weblink):
     headers = {
         'user-agent': 'Python Client'
     }
-    r = requests.get(weblink, headers=headers, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
+    r = session.get(weblink, headers=headers, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
     if r.status_code != 200:
         return None
 
@@ -118,7 +119,7 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
         try:
             df['OI'] = df['DELIVERY']
         except Exception as ex:
-            getQ().put({'event': 'log', 'data': 'Delivery data unavailable on current server.'})
+            getQ().put({'event': 'log', 'data': 'Delivery data unavailable on selected server.'})
             getLogger().info(str(ex))
     getLogger().info('Could not reach here!.')
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
@@ -363,7 +364,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.4"
+    return "4.5"
 
 @app.route('/test', methods=['POST'])
 def test():
@@ -452,7 +453,7 @@ def getstream():
 
     if main_config is not None:
         vlink = main_config["LINKS"]["version"]['link']
-        r = requests.get(vlink, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
+        r = session.get(vlink, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
         if r.status_code != 200:
             m = "Cannot connect to internet! StockD requires internet to function! If you are sure you have internet connectivity, then report this and proceed with download."
             getLogger().info('Status recieved: ' + r.status_code)
@@ -473,7 +474,7 @@ def getstream():
 def getnews():
     global SECURE_FLAG
     global TIMEOUT_DURATION
-    r = requests.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D", verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
+    r = session.get("https://docs.google.com/document/export?format=txt&id=1-SIzNgaFaCC-Ohmdg55-ksL2aIaM0k8O1QBzTOD3zvA&includes_info_params=true&inspectorResult=%7B%22pc%22%3A1%2C%22lplc%22%3A1%7D", verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
     if r.status_code != 200:
         getLogger().info('News load failed!')
         getLogger().info('Server says ' + r.status_code)

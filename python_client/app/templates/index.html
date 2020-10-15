@@ -212,12 +212,16 @@
                         </div>
                     </div>
                     <div class="form-group row">
+                        <!-- This hack has it's limitations, but should be okay for most normal users.
+                        reference: https://github.com/indrimuska/jquery-editable-select/issues/39#issuecomment-313520978 -->
                         <label for="allDir" class="col-sm-4 col-form-label">Load Link Profile from:</label>
                         <div class="col-sm-4">
-                            <select type="text" class="form-control" id="linkProfile">
-                                <option value="https://virresh.github.io/StockD/py/nse_archives.json">https://virresh.github.io/StockD/py/nse_archives.json</option>
-                                <option value="https://virresh.github.io/StockD/py/nse_live.json">https://virresh.github.io/StockD/py/nse_live.json</option>
-                                <option value="https://virresh.github.io/StockD/py/nse_old.json">https://virresh.github.io/StockD/py/nse_old.json</option>
+                            <input type="hidden" id="linkProfile"/>
+                            <select class="form-control" id="linkProfileEditable">
+                                <option data-cc="https://virresh.github.io/StockD/py/nse_archives.json">NSE Archives (default)</option>
+                                <option data-cc="https://virresh.github.io/StockD/py/nse_live.json">NSE Daily</option>
+                                <option data-cc="https://virresh.github.io/StockD/py/nse_old.json">NSE Daily (with Delivery)</option>
+                                <option data-cc="https://virresh.github.io/StockD/py/nse_old.json">NSE Old</option>
                             </select>
                         </div>
                         <button class="col-sm-4 form-control btn btn-dark" onclick="loadLinkProfile('#linkProfile')" id="linkProfileLoad">Load</button>
@@ -295,7 +299,10 @@
                 setVersion();
                 setnews();
                 setConfiguration();
-                $('#linkProfile').editableSelect();
+                $('#linkProfileEditable').editableSelect().on('select.editable-select', function (e, el) {
+                    // el is the selected item "option"
+                    $('#linkProfile').val(el.data('cc'));
+                });
                 window.sPrefDirty = false;
                 $('#loader').hide();
             };
