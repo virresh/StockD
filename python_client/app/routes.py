@@ -214,7 +214,7 @@ def process_day(configs, date):
             except Exception as e:
                 getLogger().info('EQ Bhavcopy failed')
                 getLogger().info(str(e))
-                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find EQ Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find EQ Bhavcopy on selected Server for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['fuCheck']['value'] == 'true':
             try:
@@ -228,7 +228,7 @@ def process_day(configs, date):
             except Exception as e:
                 getLogger().info('FU Bhavcopy failed')
                 getLogger().info(str(e))
-                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find FU Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find FU Bhavcopy on selected Server for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['inCheck']['value'] == 'true':
             try:
@@ -250,7 +250,7 @@ def process_day(configs, date):
             except Exception as e:
                 getLogger().info('IN Bhavcopy failed')
                 getLogger().info(str(e))
-                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find IN Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
+                getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find IN Bhavcopy on selected Server for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['allCheck']['value'] == 'true' and not (eqdf is None and fudf is None and indf is None):
             try:
@@ -349,6 +349,8 @@ def process_range():
 
         main_config = loadConfigFromDisk()
 
+        getQ().put({'event': 'log', 'data': '##### Using link Profile {} #####'.format(main_config['BASELINK']['stock_TYPE'])})
+        getQ().put({'event': 'log', 'data': '======= Starting Downlad ======='})
         getQ().put({'event': 'progress', 'data': '0'})
         delta = datetime.timedelta(1)
         total_range = end - start + delta
@@ -368,6 +370,7 @@ def process_range():
         getQ().put({'event': 'progress', 'data': '-1'})
 
     STOP_FLAG = False
+    getQ().put({'event': 'log', 'data': '======= Downlad End ======='})
     return "Downloaded {}/{} days.{}".format(done_days, total_days, message)
 
 @app.route('/')
