@@ -31,7 +31,8 @@
                         <input type="date" class="form-control set-today" id="toDate" name="toDate">
                     </div>
                 </div>
-                <button type="submit" onclick="performDownload()" class="btn btn-primary">Download</button>
+                <button type="submit" id="downloadButton" onclick="performDownload()" class="btn btn-primary">Download</button>
+                <button type="submit" id="stopButton" onclick="performStop()" class="btn btn-danger">Stop</button>
             </form>
         </div>
         <marquee id="news" behavior="scroll" direction="left" onmouseover="this.stop();" onmouseout="this.start();">
@@ -306,6 +307,11 @@
                 window.sPrefDirty = false;
                 $('#loader').hide();
             };
+            function performStop() {
+                event.preventDefault();
+                $.get('/stop');
+                swal("Stop signal sent", "The download will not add any more days in processing queue and stop after processing current queue.", "info");
+            };
             function performDownload() {
                 event.preventDefault();
                 if(window.sPrefDirty == true){
@@ -388,6 +394,8 @@
             };
             function setDisable(val) {
                 $("#preferencesForm *").prop("disabled", val);
+                $("#stopButton").prop("disabled", !val);
+                $("#downloadButton").prop("disabled", val);
             };
             function loadLinkProfile(urlId) {
                 event.preventDefault();
