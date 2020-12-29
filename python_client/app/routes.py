@@ -120,9 +120,9 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
     dataDate = None
 
     if 'DATE1' in df.columns:
-        dataDate = get_date(df['DATE1'][0])
+        dataDate = get_date(df['DATE1'].iloc[0])
     elif 'TIMESTAMP' in df.columns:
-        dataDate = get_date(df['TIMESTAMP'][0])
+        dataDate = get_date(df['TIMESTAMP'].iloc[0])
 
     if not (parse(dataDate, '{0:%Y}{0:%m}{0:%d}') == parse(d, '{0:%Y}{0:%m}{0:%d}')):
         getLogger().error("Date Integrity check failed. Found date {} but expected {}. Skipping.".format(dataDate, d))
@@ -238,7 +238,7 @@ def process_day(configs, date):
                 getQ().put({'event': 'log', 'data': parse(date, 'Convert Equity Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
             except Exception as e:
                 getLogger().info('EQ Bhavcopy failed')
-                getLogger().info(str(e))
+                getLogger().info(str(e), exc_info=e)
                 getQ().put({'event': 'log', 'data': parse(date, 'Cannot Find EQ Bhavcopy on selected Server for {0:%Y}-{0:%b}-{0:%d}')})
 
         if configs['SETTINGS']['fuCheck']['value'] == 'true':
