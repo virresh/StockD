@@ -14,6 +14,7 @@ import traceback
 import webview
 import collections.abc
 import logging
+import re
 from multiprocessing.managers import BaseManager
 
 SECURE_FLAG = True
@@ -50,6 +51,18 @@ class dWrapper:
 
 def parse(d, s):
     return s.format(dWrapper(d))
+
+def get_date(dString):
+    # Check if incoming date has any alphabet
+    # So far, only two date formats were found in given csv
+    # so this might just work
+    type1 = r"%d-%b-%Y"
+    type2 = r"%d-%m-%Y"
+    if re.search('[a-zA-Z]', dString):
+        return datetime.datetime.strptime(dString, type1)
+    else:
+        return datetime.datetime.strptime(dString, type2)
+
 
 def getQ():
     # if not hasattr(g, 'eventQ'):
@@ -104,6 +117,18 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
     df = get_csv(weblink)
     df = df.replace('-', '0')
     df = df[df['SERIES'].isin(['EQ', 'BE'])]
+    dataDate = None
+
+    if 'DATE1' in df.columns:
+        dataDate = get_date(df['DATE1'][0])
+    elif 'TIMESTAMP' in df.columns:
+        dataDate = get_date(df['TIMESTAMP'][0])
+
+    if not (parse(dataDate, '{0:%Y}{0:%m}{0:%d}') == parse(d, '{0:%Y}{0:%m}{0:%d}')):
+        getLogger().error("Date Integrity check failed. Found date {} but expected {}. Skipping.".format(dataDate, d))
+        getQ().put({'event': 'log', 'data': parse(d, 'Equity Bhavcopy Date Mismatch. Skipping Equity Bhavcopy for {0:%Y}-{0:%b}-{0:%d}')})
+        raise Exception("Date Mismatch Error")
+
     cname_map = {
         'TOTTRDQTY': 'VOLUME',
         'TTL_TRD_QNTY': 'VOLUME',
@@ -381,7 +406,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.5"
+    return "4.6"
 
 @app.route('/test', methods=['POST'])
 def test():
