@@ -1,0 +1,33 @@
+#:kivy 1.0.9
+
+<MainWin>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        size: root.width, root.height
+        orientation: "vertical"
+        SImageButton:
+            source: 'icon.png'
+            size: self.texture_size
+            center_x: root.width / 2
+            link: 'https://virresh.github.io/projects/stockd'
+
+        Label:
+            font_size: 32  
+            center_x: root.width / 2
+            text: "Usage: Enter dates and hit download"
+            color: 0,0,0,1
+        
+        CustomPicker
+
+[CustomPicker@BoxLayout]:
+    orientation: "horizontal"
+    Label:
+        font_size: 20
+        color: 0,0,0,1
+        text: "From Date"
+    DatePicker
