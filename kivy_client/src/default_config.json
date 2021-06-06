@@ -1,0 +1,150 @@
+{
+    "BASELINK": {
+        "base_URL": "https://www.nseindia.com",
+        "stock_TYPE": "NSE Archives"
+    },
+    "SETTINGS": {
+        "eqCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "eqDeliveryDataCheck": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "eqDir": {
+            "type": "directory",
+            "value": "./Equity"
+        },
+        "fuCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "fuDir": {
+            "type": "directory",
+            "value": "./Futures"
+        },
+        "fuPrefix": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "inCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "inKeepOthersCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "inDir": {
+            "type": "directory",
+            "value": "./Indices"
+        },
+        "allCheck": {
+            "type": "checkbox",
+            "value": "true"
+        },
+        "allIncludeFUCheck": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "allDir": {
+            "type": "directory",
+            "value": "./EOD"
+        },
+        "advSkipWeekend": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "insecureMode": {
+            "type": "checkbox",
+            "value": "false"
+        },
+        "rTimeout": {
+            "type": "range",
+            "value": 10
+        }
+    },
+    "LINKS": {
+        "eqBhav": {
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22CM%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22equities%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=equities&mode=single"
+        },
+        "fuBhav": {
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22F%26O%20-%20Bhavcopy(csv)%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22derivatives%22%2C%22section%22%3A%22equity%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=equity&mode=single"
+        },
+        "indall": {
+            "link": "https://www.nseindia.com/api/reports?archives=%5B%7B%22name%22%3A%22Daily%20Snapshot%22%2C%22type%22%3A%22archives%22%2C%22category%22%3A%22capital-market%22%2C%22section%22%3A%22indices%22%7D%5D&date={0:%d}-{0:%b}-{0:%Y}&type=indices&mode=single"
+        }, 
+        "version": {
+            "link": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
+        }
+    },
+    "INDICES" : {},
+    "index_map": {
+        "CNX NIFTY": "NIFTY",
+        "NIFTY 50": "NIFTY",
+        "CNX NIFTY JUNIOR": "JUNIOR",
+        "NIFTY NEXT 50": "JUNIOR",
+        "CNX BANK": "BANKNIFTY",
+        "BANK NIFTY": "BANKNIFTY",
+        "NIFTY BANK": "BANKNIFTY",
+        "CNX 100": "NSE100",
+        "NIFTY 100": "NSE100",
+        "CNX MIDCAP": "NSEMIDCAP",
+        "NIFTY MIDCAP 100": "NSEMIDCAP",
+        "CNX IT": "NSEIT",
+        "NIFTY IT": "NSEIT",
+        "CNX 500": "NSE500",
+        "NIFTY 500": "NSE500",
+        "CNX DEFTY": "NSEDEFTY",
+        "NIFTY50 USD": "NSEDEFTY",
+        "NIFTY MIDCAP 50": "MIDCAP50",
+        "S&P ESG INDIA INDEX": "NSEESG",
+        "CNX NIFTY SHARIAH": "NSESHARIAH",
+        "NIFTY50 SHARIAH": "NSESHARIAH",
+        "CNX 500 SHARIAH": "SHARIAH500",
+        "NIFTY500 SHARIAH": "SHARIAH500",
+        "CNX INFRA": "NSEINFRA",
+        "NIFTY INFRA": "NSEINFRA",
+        "CNX INFRASTRUCTURE": "NSEINFRA",
+        "NIFTY INFRASTRUCTURE": "NSEINFRA",
+        "CNX REALITY": "NSEREALTY",
+        "NIFTY REALITY": "NSEREALTY",
+        "CNX ENERGY": "NSEENERGY",
+        "NIFTY ENERGY": "NSEENERGY",
+        "CNX FMCG": "NSEFMCG",
+        "NIFTY FMCG": "NSEFMCG",
+        "CNX MNC": "NSEMNC",
+        "NIFTY MNC": "NSEMNC",
+        "CNX PHARMA": "NSEPHARMA",
+        "NIFTY PHARMA": "NSEPHARMA",
+        "CNX PSE": "NSEPSE",
+        "NIFTY PSE": "NSEPSE",
+        "CNX PSU BANK": "NSEPSUBANK",
+        "NIFTY PSU BANK": "NSEPSUBANK",
+        "CNX SERVICE": "NSESERVICE",
+        "NIFTY SERV SECTOR": "NSESERVICE",
+        "NIFTY SERVICES SECTOR": "NSESERVICE",
+        "CNX AUTO": "NSEAUTO",
+        "NIFTY AUTO": "NSEAUTO",
+        "CNX FINANCE": "NSEFINANCE",
+        "NIFTY FINANCE": "NSEFINANCE",
+        "NIFTY FINANCIAL SERVICES": "NSEFINANCE",
+        "CNX METAL": "NSEMETAL",
+        "NIFTY METAL": "NSEMETAL",
+        "INDIA VIX": "VIX",
+        "LIX15": "NSE100LIQ15",
+        "NIFTY100 LIQUID 15": "NSE100LIQ15",
+        "CNX DIVIDEND OPPORTUNITIES": "NSEDIVOPPS50",
+        "NIFTY DIVIDEND OPPORTUNITIES 50": "NSEDIVOPPS50",
+        "CNX MEDIA": "NSEMEDIA",
+        "NIFTY MEDIA": "NSEMEDIA",
+        "CNX COMMODITIES": "NSECOMMODITIES",
+        "NIFTY COMMODITIES": "NSECOMMODITIES",
+        "CNX CONSUMPTION": "NSECONSUMPTION",
+        "NIFTY CONSUMPTION": "NSECONSUMPTION",
+        "NIFTY 8-13 YR G-SEC": "NSEGSEC10",
+        "NIFTY 10 YR BENCHMARK G-SEC": "NSEGSECBM",
+        "NIFTY 10 YR BENCHMARK G-SEC (CLEAN PRICE)": "NSEGSECBMCLEAN"
+    }
+}

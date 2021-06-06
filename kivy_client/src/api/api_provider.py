@@ -3,7 +3,7 @@ import logging
 import os
 import io
 import json
-import utility
+import api.utility as utility
 import zipfile
 import pandas as pd
 
@@ -96,7 +96,12 @@ class StockdAPIObj(object):
     
     def check_for_updates(self):
         vlink = self.main_config["LINKS"]["version"]['link']
-        r = self.session.get(vlink, verify=self.SECURE_FLAG, timeout=self.TIMEOUT_DURATION)
+        try:
+            r = self.session.get(vlink, verify=self.SECURE_FLAG, timeout=self.TIMEOUT_DURATION)
+        except Exception as ex:
+            self.logger.error("Exception while connecting to Server.", exc_info=True)
+            return ""
+
         if r.status_code != 200:
             m = "Cannot connect to internet! StockD requires internet to function! If you are sure you have internet connectivity, then report this and proceed with download."
             self.logger.info('Status recieved: ' + r.status_code)

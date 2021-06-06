@@ -1,33 +1,90 @@
-#:kivy 1.0.9
+#:kivy 2.0.0
+#:import SImageButton gui.widgets.flat_button.SImageButton
 
 <MainWin>:
-    canvas.before:
-        Color:
-            rgba: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    BoxLayout:
-        size: root.width, root.height
+    MDBoxLayout:
         orientation: "vertical"
+        MDToolbar:
+            title: "StockD v" + app.api_obj.version()
+
+Screen:
+
+    BoxLayout:
+        orientation: "vertical"
+
+        MDToolbar:
+            title: "StockD v" + app.api_obj.version()
+
         SImageButton:
             source: 'icon.png'
-            size: self.texture_size
-            center_x: root.width / 2
             link: 'https://virresh.github.io/projects/stockd'
+            size_hint: (None, None)
+            pos_hint: {'center_x': 0.5}
 
-        Label:
-            font_size: 32  
-            center_x: root.width / 2
+        MDLabel:
+            size_hint_y: None
             text: "Usage: Enter dates and hit download"
-            color: 0,0,0,1
-        
-        CustomPicker
+            font_style: "H5"
+            halign: "center"
 
-[CustomPicker@BoxLayout]:
-    orientation: "horizontal"
-    Label:
-        font_size: 20
-        color: 0,0,0,1
-        text: "From Date"
-    DatePicker
+        MDBoxLayout:
+            orientation: "horizontal"
+            adaptive_height: True
+            padding: [40]
+
+            MDLabel:
+                text: "From Date:"
+                size_hint_x: 0.3
+                halign: "center"
+
+            MDTextField:
+                on_focus: app.show_datepicker_dialog(args[1], "from")
+                id: from_date
+                mode: "rectangle"
+                halign: "center"
+                icon_right: "calendar"
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            adaptive_height: True
+            padding: [40, 0]
+
+            MDLabel:
+                text: "To Date:"
+                size_hint_x: 0.3
+                halign: "center"
+
+            MDTextField:
+                on_focus: app.show_datepicker_dialog(args[1], "to")
+                id: to_date
+                mode: "rectangle"
+                halign: "center"
+                icon_right: "calendar"
+
+        BoxLayout:
+            orientation: "horizontal"
+            padding: [40, 0]
+            size_hint_x: 1
+
+            MDRaisedButton:
+                id: btn_download
+                text: "Download"
+                font_style: "H6"
+                size_hint_x: 0.45
+                md_bg_color: app.theme_cls.primary_color
+                on_release: app.hit_download()
+
+            MDBoxLayout:
+                size_hint_x: 0.1
+
+            MDRaisedButton:
+                id: btn_stop
+                text: "Stop"
+                font_style: "H6"
+                size_hint_x: 0.45
+                md_bg_color: app.theme_cls.error_color
+                on_release: app.hit_stop()
+                disabled: True
+
+        BoxLayout:
+
