@@ -4,7 +4,7 @@
 </p>  
 
 [![Join the chat at https://gitter.im/virresh/StockD](https://badges.gitter.im/virresh/StockD.svg)](https://gitter.im/virresh/StockD?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![HitCount](http://hits.dwyl.com/virresh/StockD.svg)](http://hits.dwyl.com/virresh/StockD)
+![Downloads](https://img.shields.io/github/downloads/virresh/stockd/total)
 
 EOD Stock data downloader  
 Official Website: https://virresh.github.io/projects/stockd  
