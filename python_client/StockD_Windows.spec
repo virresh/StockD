@@ -1,14 +1,16 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+
 block_cipher = None
 
 
 a = Analysis(['runner.py'],
-             pathex=['C:\\Users\\viresh\\Documents\\StockD_build\\StockD\\python_client'],
+             pathex=['D:\\GIT\\StockD\\python_client'],
              binaries=[],
              datas=[('app\\static', 'static'), ('app\\templates', 'templates')],
              hiddenimports=[],
-             hookspath=[],
+             hookspath=['C:\\Users\\virre\\miniconda3\\envs\\stockd\\lib\\site-packages\\cefpython3\\examples\\pyinstaller\\'],
+             hooksconfig={},
              runtime_hooks=[],
              excludes=[],
              win_no_prefer_redirects=False,
@@ -17,11 +19,12 @@ a = Analysis(['runner.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
           a.zipfiles,
-          a.datas,
+          a.datas,  
           [],
           name='StockD_Windows',
           debug=False,
@@ -30,4 +33,8 @@ exe = EXE(pyz,
           upx=True,
           upx_exclude=[],
           runtime_tmpdir=None,
-          console=False , icon='app\\static\\img\\favicon.ico')
+          console=False,
+          disable_windowed_traceback=False,
+          target_arch=None,
+          codesign_identity=None,
+          entitlements_file=None , icon='app\\static\\img\\favicon.ico')

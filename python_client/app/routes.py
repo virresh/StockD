@@ -26,8 +26,24 @@ logging.basicConfig(filename='stockd_debuglog.txt',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
+nse_client_hints = {
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36', 
+    'sec-ch-ua': '"Not?A_Brand";v="8", "Chromium";v="108", "Google Chrome";v="108"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': "Windows",
+    'dnt': '1',
+    'upgrade-insecure-requests': '1',
+    'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+    'sec-fetch-site': 'same-site',
+    'sec-fetch-mode': 'navigate',
+    'sec-fetch-user': '?1',
+    'sec-fetch-dest': 'document',
+    'referer': 'https://www.nseindia.com/',
+    'accept-encoding': 'gzip, deflate, br',
+    'accept-language': 'en-US,en;q=0.9,hi;q=0.8'
+}
 session = requests.Session()
-session.get('https://www.nseindia.com/', headers = {'user-agent': 'Python Client'})
+session.get('https://www.nseindia.com/', headers = nse_client_hints)
 logging.info("Running StockD")
 logging.info("StockD Secure Flag == " + str(SECURE_FLAG))
 logger = logging.getLogger('StockD')
@@ -93,10 +109,8 @@ def attachToStream():
 def get_csv(weblink):
     global SECURE_FLAG
     global TIMEOUT_DURATION
-    headers = {
-        'user-agent': 'Python Client'
-    }
-    r = session.get(weblink, headers=headers, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
+
+    r = session.get(weblink, headers=nse_client_hints, verify=SECURE_FLAG, timeout=TIMEOUT_DURATION)
     if r.status_code != 200:
         return None
 
@@ -406,7 +420,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.6"
+    return "4.7"
 
 @app.route('/test', methods=['POST'])
 def test():
