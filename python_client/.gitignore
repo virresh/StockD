@@ -7,4 +7,6 @@ Indices
 build/
 dist/
 generate_config.json
+stockd_debuglog.txt
+stockd_clilog.txt
 *.spec

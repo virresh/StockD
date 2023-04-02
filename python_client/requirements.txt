@@ -1,5 +1,8 @@
 Flask==2.0.1
 pandas==1.1.5
 pyinstaller==4.5.1
-pywebview==3.5
+pywebview[cef]==3.5
 requests==2.26.0
+bs4==0.0.1
+sseclient==0.0.27
+blessed==1.20.0

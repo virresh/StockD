@@ -161,7 +161,6 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
         except Exception as ex:
             getQ().put({'event': 'log', 'data': 'Delivery data unavailable on selected server.'})
             getLogger().info(str(ex))
-    getLogger().info('Could not reach here!.')
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
     return df
@@ -220,6 +219,7 @@ def process_in(weblink, saveloc, d, index_mapping={}, keeplist=set(), keepall='f
         elif keepall != 'false':
             return item.replace('NIFTY', 'NSE').replace(' ', '')
         else:
+            logger.error("Cannot find a symbol for {}. Enable keep others to keep the symbol.".format(item))
             return None
     # df['SYMBOL'] = df['SYMBOL'].apply(lambda x: x.replace(' ', '_'))
     df['SYMBOL'] = df['SYMBOL'].apply(_rename)
@@ -352,6 +352,14 @@ def saveConfigToDisk(main_config):
         json.dump(main_config, f)
         getLogger().info('Configuration save success')
 
+def process_aux_config(form_dict, main_config):
+    if 'auxConfig' in form_dict:
+        aux_config = json.loads(request.form['auxConfig'])
+        getLogger().info('Overriding saved config with ' + request.form['auxConfig'])
+        getQ().put({'event': 'log', 'data': 'Downloading with temporarily overriden config.'})
+        main_config = update(main_config, aux_config)
+    return main_config
+
 @app.route('/choose', methods=['POST'])
 def choose_path():
     dirs = app.winreference.create_file_dialog(webview.FOLDER_DIALOG)
@@ -387,6 +395,7 @@ def process_range():
             return
 
         main_config = loadConfigFromDisk()
+        main_config = process_aux_config(request.form, main_config)
 
         getQ().put({'event': 'log', 'data': '##### Using link Profile {} #####'.format(main_config['BASELINK']['stock_TYPE'])})
         getQ().put({'event': 'log', 'data': '======= Starting Downlad ======='})
@@ -420,7 +429,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.7"
+    return "4.8"
 
 @app.route('/test', methods=['POST'])
 def test():
@@ -433,12 +442,13 @@ def qadder(datapackage):
     getQ().put({'event': 'message', 'data': datapackage})
     return "Currently " + str(getQ().qsize()) + " events."
 
-@app.route('/getConfig', methods=['GET'])
+@app.route('/getConfig', methods=['GET', 'POST'])
 def getConfig():
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         abort(404)
 
     main_config = loadConfigFromDisk()
+    main_config = process_aux_config(request.form, main_config)
 
     return jsonify(main_config)
 
@@ -490,7 +500,7 @@ Stream is supposed provide three events:
 def getstream():
     global SECURE_FLAG
     global TIMEOUT_DURATION
-    m = "";
+    m = ""
     main_config = None
     if not os.path.exists(os.path.join(app.static_folder, 'default_config.json')):
         m = "Configuration files missing!"
