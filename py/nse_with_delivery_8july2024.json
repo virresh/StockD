@@ -1,0 +1,20 @@
+{
+    "BASELINK": {
+        "base_URL": "https://archives.nseindia.com",
+        "stock_TYPE": "NSE Daily (with Delivery)"
+    },
+    "LINKS": {
+        "eqBhav": {
+            "link": "https://nsearchives.nseindia.com/products/content/sec_bhavdata_full_{0:%d}{0:%m}{0:%Y}.csv"
+        },
+        "fuBhav": {
+            "link": "https://nsearchives.nseindia.com/content/fo/BhavCopy_NSE_FO_0_0_0_{0:%Y}{0:%m}{0:%d}_F_0000.csv.zip"
+        },
+        "indall": {
+            "link": "https://nsearchives.nseindia.com/content/indices/ind_close_all_{0:%d}{0:%m}{0:%Y}.csv"
+        },
+        "version": {
+            "link": "https://docs.google.com/document/export?format=txt&id=1B_QqPYNQvTPN817DkDxESOv9AgjxUnhTCPP7rXFZxr4&token=AC4w5Vg1I7eEt3MFysH9EMgsVKxd1bCb4w%3A1593185289693"
+        }
+    }
+}
