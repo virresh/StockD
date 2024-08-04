@@ -74,8 +74,11 @@ def get_date(dString):
     # so this might just work
     type1 = r"%d-%b-%Y"
     type2 = r"%d-%m-%Y"
+    type3 = r"%Y-%m-%d"
     if re.search('[a-zA-Z]', dString):
         return datetime.datetime.strptime(dString, type1)
+    elif re.search('[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]', dString):
+        return datetime.datetime.strptime(dString, type3)
     else:
         return datetime.datetime.strptime(dString, type2)
 
@@ -130,13 +133,19 @@ def get_csv(weblink):
 def process_eq(weblink, saveloc, d, get_delivery=None):
     df = get_csv(weblink)
     df = df.replace('-', '0')
-    df = df[df['SERIES'].isin(['EQ', 'BE'])]
+    if 'SERIES' in df:
+        df = df[df['SERIES'].isin(['EQ', 'BE'])]
+    elif 'SctySrs' in df:
+        df = df[df['SctySrs'].isin(['EQ', 'BE'])]
+        df = df.sort_values('TckrSymb', kind='stable')
     dataDate = None
 
     if 'DATE1' in df.columns:
         dataDate = get_date(df['DATE1'].iloc[0])
     elif 'TIMESTAMP' in df.columns:
         dataDate = get_date(df['TIMESTAMP'].iloc[0])
+    elif 'TradDt' in df.columns:
+        dataDate = get_date(df['TradDt'].iloc[0])
 
     if not (parse(dataDate, '{0:%Y}{0:%m}{0:%d}') == parse(d, '{0:%Y}{0:%m}{0:%d}')):
         getLogger().error("Date Integrity check failed. Found date {} but expected {}. Skipping.".format(dataDate, d))
@@ -150,7 +159,13 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
         'HIGH_PRICE': 'HIGH',
         'LOW_PRICE': 'LOW',
         'CLOSE_PRICE': 'CLOSE',
-        'DELIV_QTY': 'DELIVERY'
+        'DELIV_QTY': 'DELIVERY',
+        'TckrSymb': 'SYMBOL',
+        'TtlTradgVol': 'VOLUME',
+        'OpnPric': 'OPEN',
+        'HghPric': 'HIGH',
+        'LwPric': 'LOW',
+        'ClsPric': 'CLOSE',
     }
     df = df.rename(columns=cname_map)
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
@@ -167,7 +182,25 @@ def process_eq(weblink, saveloc, d, get_delivery=None):
 
 def process_fu(weblink, saveloc, d, asPrefix=False):
     df = get_csv(weblink)
-    df = df[df['INSTRUMENT'].isin(['FUTIDX', 'FUTSTK'])]
+    # Separate out Futures and remove entries corresponding to options
+    if 'INSTRUMENT' in df:
+        df = df[df['INSTRUMENT'].isin(['FUTIDX', 'FUTSTK'])]
+    elif 'FinInstrmTp' in df:
+        df = df[df['FinInstrmTp'].isin(['IDF', 'STF'])]
+        df = df.sort_values(['TckrSymb', 'XpryDt'], kind='stable')
+    
+    cname_map = {
+        'CONTRACTS': 'VOLUME',
+        'OPEN_INT': 'OI',
+        'TckrSymb': 'SYMBOL',
+        'TtlTradgVol': 'VOLUME',
+        'OpnPric': 'OPEN',
+        'HghPric': 'HIGH',
+        'LwPric': 'LOW',
+        'ClsPric': 'CLOSE',
+        'OpnIntrst': 'OI',
+    }
+    df = df.rename(columns=cname_map)
 
     last_symbol = None
     prefix = 'I'
@@ -184,11 +217,6 @@ def process_fu(weblink, saveloc, d, asPrefix=False):
         else:
             row['SYMBOL'] = row['SYMBOL'] + '-' + prefix
 
-    cname_map = {
-        'CONTRACTS': 'VOLUME',
-        'OPEN_INT': 'OI'
-    }
-    df = df.rename(columns=cname_map)
     df['DATE'] = [parse(d, '{0:%Y}{0:%m}{0:%d}')] * len(df)
     df = df[['SYMBOL', 'DATE', 'OPEN', 'HIGH', 'LOW', 'CLOSE', 'VOLUME', 'OI']]
     df.to_csv(saveloc, header=None, index=None)
@@ -429,7 +457,7 @@ def index():
 
 @app.route('/version')
 def version():
-    return "4.8"
+    return "4.9"
 
 @app.route('/test', methods=['POST'])
 def test():

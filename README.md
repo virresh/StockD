@@ -18,12 +18,15 @@ If you find this software useful, consider [contributing](https://github.com/vir
 - Can use custom profiles for links and settings
 - Convert the EOD data into a common format which can be used by several professional softwares for charting
 - Can download delivery data for equity
+- CLI support (v4.8+ required).
 
 ## F.A.Q
 - EXE is detected as a Virus!  
 Given that you've downloaded the exe from official sources (the github release website or the official website, link above), the exe file should be virus free. Unfortunately many anti-viruses use inaccurate heuristics to detect viruses and will occasionally give you a false positive, especially when the exe is not signed. Since I'm an individual maintaining this software, I don't have enough funds to get the exe signed by a trusted provided, so if you run into this problem, I recommend you to make exceptions in your antivirus or compile the application from source (in case you don't trust the sources). I'll also add md5 hashes of the files so you can verify them post downloading to eliminate any possibility of virus injection.   
 - Application doesn't start up!  
 The application is slow to load when starting for the first time. Thus, please wait a while (~5 minutes) on the first load. If you get an error, or it doesn't start up, ensure you have latest [Microsoft Dot Net](https://dotnet.microsoft.com/download/dotnet-framework) version installed. If the application takes long time to start even after your first load, try making an exception fro StockD in your antivirus. Antiviruses might be interfering with any exe performing disk access and StockD is no exception. Using an SSD should also help speeding up program loading. Ideally it should start in ~5-10 seconds after the first load. Also, do not delete the `generate_config.json` file after the first load, otherwise the program will take the same time to start next time.  
+- Which version contains a CLI?  
+CLI is available in all binaries, but in order to take full advantage of cli, please use the with_cli_console version. The only difference between these two versions is that the with_cli_console version contains a console that shows the result of commands executed via cli. It is expected to have this console show up when operating this version in GUI mode as well. Since many people don't prefer that, I additionally provide a version with hidden console.
 - Who provides this data?  
 The data provided can be set using given profiles. All the current profiles fetch data from Official NSE website. You may be able to use other community-supplied profiles as well.
 - What is the Data Format?  
