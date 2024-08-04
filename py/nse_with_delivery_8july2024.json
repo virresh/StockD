@@ -1,6 +1,6 @@
 {
     "BASELINK": {
-        "base_URL": "https://archives.nseindia.com",
+        "base_URL": "https://nsearchives.nseindia.com",
         "stock_TYPE": "NSE Daily (with Delivery)"
     },
     "LINKS": {
